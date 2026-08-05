@@ -1,0 +1,9 @@
+services:
+  atlas-frontend:
+    build:
+      context: .
+      dockerfile: docker/staging/Dockerfile
+
+    env_file:
+      - env/.env.base
+      - env/.env.staging
