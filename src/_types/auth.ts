@@ -11,4 +11,20 @@ export type RegisterResponse = {
   email: string;
   first_name: string;
   last_name: string;
+}
+
+export type LoginPayload = {
+  email: string;
+  password: string;
+};
+
+export type LoginResponse = {
+  access: string;
+  refresh: string;
+  user: {
+    id: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+  };
 };
