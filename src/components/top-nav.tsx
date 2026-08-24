@@ -45,6 +45,7 @@ export function TopNav() {
   // Helper to convert route paths into formatted titles ("Team", "Settings")
   const pageTitle = React.useMemo(() => {
     if (!pathname || pathname === "/") return "Home"
+    if (!pathname || pathname === "/team") return "Team"
     const segment = pathname.split("/").filter(Boolean)[0]
     return segment ? segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, " ") : "Home"
   }, [pathname])
