@@ -36,6 +36,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { EditRoleModal } from "./components/EditRoleModal";
+import { Role } from "@/_types/members";
 
 // Mock Data
 const MOCK_MEMBERS = [
@@ -45,7 +47,7 @@ const MOCK_MEMBERS = [
     email: "sarah.connor@example.com",
     avatar:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150",
-    role: "admin",
+    role: "admin" as Role,
     status: "active",
     dateJoined: "2024-01-15",
   },
@@ -55,7 +57,7 @@ const MOCK_MEMBERS = [
     email: "alex.j@example.com",
     avatar:
       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150",
-    role: "member",
+    role: "member" as Role,
     status: "active",
     dateJoined: "2024-02-01",
   },
@@ -64,7 +66,7 @@ const MOCK_MEMBERS = [
     name: "Michael Scott",
     email: "m.scott@example.com",
     avatar: "",
-    role: "member",
+    role: "member" as Role,
     status: "inactive",
     dateJoined: "2023-11-20",
   },
@@ -74,7 +76,7 @@ const MOCK_MEMBERS = [
     email: "elena.r@example.com",
     avatar:
       "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150",
-    role: "admin",
+    role: "admin" as Role,
     status: "active",
     dateJoined: "2024-03-10",
   },
@@ -84,7 +86,7 @@ const MOCK_MEMBERS = [
     email: "david.kim@example.com",
     avatar:
       "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150",
-    role: "member",
+    role: "member" as Role,
     status: "active",
     dateJoined: "2024-03-18",
   },
@@ -94,7 +96,7 @@ const MOCK_MEMBERS = [
     email: "amara.p@example.com",
     avatar:
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
-    role: "member",
+    role: "member" as Role,
     status: "active",
     dateJoined: "2024-04-02",
   },
@@ -103,7 +105,7 @@ const MOCK_MEMBERS = [
     name: "Lucas Vance",
     email: "lucas.v@example.com",
     avatar: "",
-    role: "member",
+    role: "member" as Role,
     status: "inactive",
     dateJoined: "2023-12-05",
   },
@@ -113,7 +115,7 @@ const MOCK_MEMBERS = [
     email: "sophia.m@example.com",
     avatar:
       "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150",
-    role: "admin",
+    role: "admin" as Role,
     status: "active",
     dateJoined: "2023-09-14",
   },
@@ -123,7 +125,7 @@ const MOCK_MEMBERS = [
     email: "j.wilson@example.com",
     avatar:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
-    role: "member",
+    role: "member" as Role,
     status: "active",
     dateJoined: "2024-04-15",
   },
@@ -132,7 +134,7 @@ const MOCK_MEMBERS = [
     name: "Olivia Chen",
     email: "olivia.c@example.com",
     avatar: "",
-    role: "member",
+    role: "member" as Role,
     status: "active",
     dateJoined: "2024-05-01",
   },
@@ -142,7 +144,7 @@ const MOCK_MEMBERS = [
     email: "marcus.b@example.com",
     avatar:
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150",
-    role: "admin",
+    role: "admin" as Role,
     status: "inactive",
     dateJoined: "2023-08-22",
   },
@@ -152,7 +154,7 @@ const MOCK_MEMBERS = [
     email: "emma.w@example.com",
     avatar:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150",
-    role: "member",
+    role: "member" as Role,
     status: "active",
     dateJoined: "2024-05-12",
   },
@@ -162,7 +164,7 @@ const MOCK_MEMBERS = [
     email: "liam.oc@example.com",
     avatar:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
-    role: "member",
+    role: "member" as Role,
     status: "active",
     dateJoined: "2024-06-03",
   },
@@ -171,7 +173,7 @@ const MOCK_MEMBERS = [
     name: "Nina Gomez",
     email: "nina.g@example.com",
     avatar: "",
-    role: "member",
+    role: "member" as Role,
     status: "inactive",
     dateJoined: "2024-01-28",
   },
@@ -181,7 +183,7 @@ const MOCK_MEMBERS = [
     email: "ben.hayes@example.com",
     avatar:
       "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150",
-    role: "admin",
+    role: "admin" as Role,
     status: "active",
     dateJoined: "2023-10-11",
   },
@@ -191,7 +193,7 @@ const MOCK_MEMBERS = [
     email: "chloe.d@example.com",
     avatar:
       "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150",
-    role: "member",
+    role: "member" as Role,
     status: "active",
     dateJoined: "2024-06-19",
   },
@@ -201,7 +203,7 @@ const MOCK_MEMBERS = [
     email: "tariq.a@example.com",
     avatar:
       "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150",
-    role: "member",
+    role: "member" as Role,
     status: "active",
     dateJoined: "2024-07-02",
   },
@@ -210,7 +212,7 @@ const MOCK_MEMBERS = [
     name: "Isabella Silva",
     email: "isabella.s@example.com",
     avatar: "",
-    role: "member",
+    role: "member" as Role,
     status: "inactive",
     dateJoined: "2024-02-14",
   },
@@ -220,7 +222,7 @@ const MOCK_MEMBERS = [
     email: "daniel.park@example.com",
     avatar:
       "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150",
-    role: "member",
+    role: "member" as Role,
     status: "active",
     dateJoined: "2024-07-20",
   },
@@ -228,9 +230,8 @@ const MOCK_MEMBERS = [
     id: "20",
     name: "Hannah Schmidt",
     email: "hannah.s@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150",
-    role: "admin",
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150",
+    role: "admin" as Role,
     status: "active",
     dateJoined: "2023-07-30",
   },
@@ -261,6 +262,20 @@ export default function MembersPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<
+    typeof MOCK_MEMBERS[0] | null
+  >(null);
+
+  const handleOpenEditModal = (member: typeof MOCK_MEMBERS[0]) => {
+    setSelectedMember(member);
+    setEditModalOpen(true);
+  };
+
+  const handleSaveRole = (memberId: string, newRole: string) => {
+    console.log(`Updated member ${memberId} role to ${newRole}`);
+  };
 
   // Interactive filtering for demo purposes
   const filteredMembers = MOCK_MEMBERS.filter((member) => {
@@ -351,132 +366,144 @@ export default function MembersPage() {
       </div>
 
       {/* Table Container */}
-<div className="rounded-md border bg-card shadow-sm overflow-hidden flex flex-col max-h-[calc(100vh-240px)]">
-  {/* Fixed Header Table */}
-  <div className="border-b bg-card shrink-0">
-    <Table className="table-fixed w-full">
-      <TableHeader>
-        <TableRow className="hover:bg-transparent border-b-0">
-          {tableHeaders.map((tableHeader) => (
-            <TableHead
-              key={tableHeader.label}
-              className={`h-10 text-xs font-semibold tracking-wider text-muted-foreground/80 uppercase ${tableHeader.className}`}
-            >
-              {tableHeader.label}
-            </TableHead>
-          ))}
-        </TableRow>
-      </TableHeader>
-    </Table>
-  </div>
+      <div className="rounded-md border bg-card shadow-sm overflow-hidden flex flex-col max-h-[calc(100vh-240px)]">
+        {/* Fixed Header Table */}
+        <div className="border-b bg-card shrink-0">
+          <Table className="table-fixed w-full">
+            <TableHeader>
+              <TableRow className="hover:bg-transparent border-b-0">
+                {tableHeaders.map((tableHeader) => (
+                  <TableHead
+                    key={tableHeader.label}
+                    className={`h-10 text-xs font-semibold tracking-wider text-muted-foreground/80 uppercase ${tableHeader.className}`}
+                  >
+                    {tableHeader.label}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+          </Table>
+        </div>
 
-  {/* Scrollable Body Table */}
-  <div className="overflow-y-auto flex-1">
-    <Table className="table-fixed w-full">
-      <TableBody>
-        {filteredMembers.length === 0 ? (
-          <TableRow>
-            <TableCell
-              colSpan={5}
-              className="h-32 text-center text-sm text-muted-foreground"
-            >
-              No members found matching your search.
-            </TableCell>
-          </TableRow>
-        ) : (
-          filteredMembers.map((member) => (
-            <TableRow
-              key={member.id}
-              className="hover:bg-muted/40 transition-colors"
-            >
-              {/* Avatar + Name + Email */}
-              <TableCell className="py-3">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-9 w-9 border border-border/40 shrink-0">
-                    <AvatarImage src={member.avatar} alt={member.name} />
-                    <AvatarFallback className="bg-muted text-muted-foreground font-medium text-xs">
-                      <User className="h-4 w-4" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-sm font-medium text-foreground truncate leading-snug">
-                      {member.name}
-                    </span>
-                    <span className="text-xs text-muted-foreground truncate leading-snug">
-                      {member.email}
-                    </span>
-                  </div>
-                </div>
-              </TableCell>
+        {/* Scrollable Body Table */}
+        <div className="overflow-y-auto flex-1">
+          <Table className="table-fixed w-full">
+            <TableBody>
+              {filteredMembers.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="h-32 text-center text-sm text-muted-foreground"
+                  >
+                    No members found matching your search.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredMembers.map((member) => (
+                  <TableRow
+                    key={member.id}
+                    className="hover:bg-muted/40 transition-colors"
+                  >
+                    {/* Avatar + Name + Email */}
+                    <TableCell className="py-3">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-9 w-9 border border-border/40 shrink-0">
+                          <AvatarImage src={member.avatar} alt={member.name} />
+                          <AvatarFallback className="bg-muted text-muted-foreground font-medium text-xs">
+                            <User className="h-4 w-4" />
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-sm font-medium text-foreground truncate leading-snug">
+                            {member.name}
+                          </span>
+                          <span className="text-xs text-muted-foreground truncate leading-snug">
+                            {member.email}
+                          </span>
+                        </div>
+                      </div>
+                    </TableCell>
 
-              {/* Role Badge */}
-              <TableCell className="py-3">
-                <Badge
-                  variant="outline"
-                  className={`gap-1.5 px-2.5 py-0.5 text-xs font-medium capitalize border ${
-                    member.role === "admin"
-                      ? "border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-800/60 dark:bg-purple-950/40 dark:text-purple-300"
-                      : "border-slate-200 bg-slate-50 text-slate-600 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-400"
-                  }`}
-                >
-                  {member.role === "admin" ? (
-                    <UserCog className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
-                  ) : (
-                    <User className="h-3.5 w-3.5 text-slate-400" />
-                  )}
-                  {member.role}
-                </Badge>
-              </TableCell>
+                    {/* Role Badge */}
+                    <TableCell className="py-3">
+                      <Badge
+                        variant="outline"
+                        className={`gap-1.5 px-2.5 py-0.5 text-xs font-medium capitalize border ${
+                          member.role === "admin"
+                            ? "border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-800/60 dark:bg-purple-950/40 dark:text-purple-300"
+                            : "border-slate-200 bg-slate-50 text-slate-600 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-400"
+                        }`}
+                      >
+                        {member.role === "admin" ? (
+                          <UserCog className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
+                        ) : (
+                          <User className="h-3.5 w-3.5 text-slate-400" />
+                        )}
+                        {member.role}
+                      </Badge>
+                    </TableCell>
 
-              {/* Status Badge */}
-              <TableCell className="py-3">
-                <Badge
-                  variant="outline"
-                  className={`capitalize text-xs font-medium ${
-                    member.status === "active"
-                      ? "border-emerald-500/30 text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 dark:text-emerald-400"
-                      : "border-destructive/30 text-destructive bg-destructive/10"
-                  }`}
-                >
-                  {member.status}
-                </Badge>
-              </TableCell>
+                    {/* Status Badge */}
+                    <TableCell className="py-3">
+                      <Badge
+                        variant="outline"
+                        className={`capitalize text-xs font-medium ${
+                          member.status === "active"
+                            ? "border-emerald-500/30 text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 dark:text-emerald-400"
+                            : "border-destructive/30 text-destructive bg-destructive/10"
+                        }`}
+                      >
+                        {member.status}
+                      </Badge>
+                    </TableCell>
 
-              {/* Date Joined */}
-              <TableCell className="py-3">
-                <span className="text-sm text-muted-foreground tabular-nums whitespace-nowrap">
-                  {member.dateJoined}
-                </span>
-              </TableCell>
+                    {/* Date Joined */}
+                    <TableCell className="py-3">
+                      <span className="text-sm text-muted-foreground tabular-nums whitespace-nowrap">
+                        {member.dateJoined}
+                      </span>
+                    </TableCell>
 
-              {/* Actions */}
-              <TableCell className="py-3 text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
-                      <MoreHorizontal className="h-4 w-4" />
-                      <span className="sr-only">Open menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem className="gap-2 cursor-pointer">
-                      <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
-                      Edit Role
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="gap-2 cursor-pointer text-destructive focus:text-destructive">
-                      <Trash2 className="h-3.5 w-3.5" />
-                      Deactivate
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))
-        )}
-      </TableBody>
-    </Table>
-  </div>
-</div>
+                    {/* Actions */}
+                    <TableCell className="py-3 text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Open menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-40">
+                          <DropdownMenuItem className="gap-2 cursor-pointer" onClick={() => handleOpenEditModal(member)}>
+                            <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
+                            Edit Role
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="gap-2 cursor-pointer text-destructive focus:text-destructive">
+                            <Trash2 className="h-3.5 w-3.5" />
+                            Deactivate
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Edit Role Modal Component */}
+        <EditRoleModal
+          open={editModalOpen}
+          onOpenChange={setEditModalOpen}
+          member={selectedMember}
+          onSave={handleSaveRole}
+        />
+      </div>
     </div>
   );
 }
