@@ -5,9 +5,11 @@ import { loginApi } from "@/app/(auth)/index";
 import { toast } from "sonner";
 import LoginForm from "./components/LoginForm";
 import { LoginFormValues } from "./schema";
+import { useAuth } from "@/app/_contexts/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleLogin = async (values: LoginFormValues) => {
     try {
@@ -21,9 +23,11 @@ export default function LoginPage() {
         return;
       }
 
+      login(data);
+
       toast.success("Login successful.");
 
-      router.push("/dashboard");
+      router.push("/");
     } catch (error) {
       toast.error("Invalid email or password.");
     }

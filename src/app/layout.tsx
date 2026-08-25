@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/
 import "./globals.css";
 import { Toaster } from "sonner";
 import { Providers } from "@/utils/providers";
+import { AuthProvider } from "./_contexts/AuthContext";
 
 const fontSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -31,11 +32,13 @@ export default function RootLayout({
       className={`${fontSans.variable} ${fontMono.variable} font-sans h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <AuthProvider>
         <Providers>
           {children}
         </Providers>
+        </AuthProvider>
         <Toaster position="top-right" richColors />
-        </body>
+      </body>
     </html>
   );
 }
