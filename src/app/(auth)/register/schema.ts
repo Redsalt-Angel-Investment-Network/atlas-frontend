@@ -1,32 +1,28 @@
 import { z } from "zod";
 
-export const signupSchema = z
-  .object({
-    firstName: z
-      .string()
-      .min(1, "First name is required.")
-      .max(150, "First name is too long."),
-
-    lastName: z
-      .string()
-      .max(150, "Last name is too long."),
-
-    email: z
-      .string()
-      .email("Please enter a valid email address."),
-
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters."),
-
-    passwordConfirmation: z.string(),
-  })
-  .refine(
-    (data) => data.password === data.passwordConfirmation,
-    {
+export function signupSchema(
+  t: (
+    key:
+      | "firstNameRequired"
+      | "firstNameTooLong"
+      | "lastNameTooLong"
+      | "emailInvalid"
+      | "passwordMin"
+      | "passwordMismatch",
+  ) => string,
+) {
+  return z
+    .object({
+      firstName: z.string().min(1, t("firstNameRequired")).max(150, t("firstNameTooLong")),
+      lastName: z.string().max(150, t("lastNameTooLong")),
+      email: z.string().email(t("emailInvalid")),
+      password: z.string().min(8, t("passwordMin")),
+      passwordConfirmation: z.string(),
+    })
+    .refine((data) => data.password === data.passwordConfirmation, {
       path: ["passwordConfirmation"],
-      message: "Passwords do not match.",
-    }
-  );
+      message: t("passwordMismatch"),
+    });
+}
 
-export type SignupFormValues = z.infer<typeof signupSchema>;
+export type SignupFormValues = z.infer<ReturnType<typeof signupSchema>>;

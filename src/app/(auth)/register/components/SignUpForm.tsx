@@ -1,19 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { signupSchema, type SignupFormValues } from "../schema";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { registerApi } from "@/app/(auth)/index";
 
 export default function SignupForm() {
+  const t = useTranslations("Register");
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const schema = useMemo(() => signupSchema(t), [t]);
 
   const {
     register,
@@ -21,7 +24,7 @@ export default function SignupForm() {
     setError,
     formState: { errors, isSubmitting },
   } = useForm<SignupFormValues>({
-    resolver: zodResolver(signupSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -43,7 +46,7 @@ export default function SignupForm() {
 
       if (!data) return;
 
-      toast.success("Account created successfully.");
+      toast.success(t("success"));
 
       router.push("/login");
     } catch (error) {
@@ -61,42 +64,37 @@ export default function SignupForm() {
 
       const responseBody = apiError.responseBody;
 
-      // Email already exists
       if (responseBody?.email?.length) {
         setError("email", {
           type: "server",
-          message: "An account with this email already exists.",
+          message: t("emailExists"),
         });
 
         return;
       }
 
-      // Object-level validation
       if (responseBody?.non_field_errors?.length) {
         const message = responseBody.non_field_errors[0];
 
         if (message.toLowerCase().includes("password")) {
           setError("password", {
             type: "server",
-            message: "Password is too weak. Please choose a stronger password.",
+            message: t("passwordWeak"),
           });
 
           return;
         }
-
       }
 
-      toast.error("Unable to create your account.");
+      toast.error(t("unable"));
     }
   };
 
   return (
     <div className="w-full max-w-md mx-auto rounded-md bg-white p-8 border border-gray-300 shadow-sm">
       <div className="mb-6 flex flex-col items-center justify-center text-center">
-        <h1 className="text-xl font-bold text-gray-900">Create Account</h1>
-        <p className="mt-1 text-sm text-gray-400">
-          Create your account to get started.
-        </p>
+        <h1 className="text-xl font-bold text-gray-900">{t("title")}</h1>
+        <p className="mt-1 text-sm text-gray-400">{t("subtitle")}</p>
       </div>
 
       <form
@@ -109,7 +107,7 @@ export default function SignupForm() {
             htmlFor="firstName"
             className="block text-sm font-medium text-gray-700"
           >
-            First Name
+            {t("firstName")}
           </label>
           <input
             id="firstName"
@@ -134,7 +132,7 @@ export default function SignupForm() {
             htmlFor="lastName"
             className="block text-sm font-medium text-gray-700"
           >
-            Last Name
+            {t("lastName")}
           </label>
           <input
             id="lastName"
@@ -160,7 +158,7 @@ export default function SignupForm() {
             htmlFor="email"
             className="block text-sm font-medium text-gray-700"
           >
-            Email
+            {t("email")}
           </label>
           <input
             id="email"
@@ -186,7 +184,7 @@ export default function SignupForm() {
             htmlFor="password"
             className="block text-sm font-medium text-gray-700"
           >
-            Password
+            {t("password")}
           </label>
           <div className="relative mt-1">
             <input
@@ -225,7 +223,7 @@ export default function SignupForm() {
             htmlFor="confirmPassword"
             className="block text-sm font-medium text-gray-700"
           >
-            Confirm Password
+            {t("confirmPassword")}
           </label>
           <div className="relative mt-1">
             <input
@@ -266,18 +264,18 @@ export default function SignupForm() {
           disabled={isSubmitting}
           className="mt-2 w-full rounded-md bg-gray-900 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-1 disabled:opacity-50 cursor-pointer"
         >
-          {isSubmitting ? "Creating account..." : "Create Account"}
+          {isSubmitting ? t("submitting") : t("submit")}
         </button>
       </form>
 
       {/* Footer */}
       <div className="mt-6 text-center text-xs text-gray-400">
-        Already have an account?{" "}
+        {t("hasAccount")}{" "}
         <Link
           href="/login"
           className="font-medium text-blue-500 hover:underline"
         >
-          Sign in
+          {t("signIn")}
         </Link>
       </div>
     </div>

@@ -18,6 +18,7 @@ import {
   ExternalLink,
 } from "lucide-react"
 
+import { LocaleSwitcher } from "@/components/LocaleSwitcher"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
@@ -44,10 +45,12 @@ export function TopNav() {
 
   // Helper to convert route paths into formatted titles ("Team", "Settings")
   const pageTitle = React.useMemo(() => {
-    if (!pathname || pathname === "/") return "Home"
-    if (!pathname || pathname === "/team") return "Team"
-    const segment = pathname.split("/").filter(Boolean)[0]
-    return segment ? segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, " ") : "Home"
+    const page = pathname
+      .split("/")
+      .filter((segment) => segment && segment !== "en" && segment !== "fr")[0]
+    if (!page) return "Home"
+    if (page === "team") return "Team"
+    return page.charAt(0).toUpperCase() + page.slice(1).replace(/-/g, " ")
   }, [pathname])
 
   return (
@@ -61,6 +64,7 @@ export function TopNav() {
 
       {/* 2. Action Controls */}
       <div className="flex items-center gap-2">
+        <LocaleSwitcher />
         {/* Theme Toggle Pill */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

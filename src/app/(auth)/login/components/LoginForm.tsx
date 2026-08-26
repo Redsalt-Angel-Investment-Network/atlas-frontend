@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { loginSchema, LoginFormValues } from "../schema";
 
 type LoginFormProps = {
@@ -12,32 +13,29 @@ type LoginFormProps = {
 };
 
 export default function LoginForm({ onSubmit }: LoginFormProps) {
+  const t = useTranslations("Login");
   const [showPassword, setShowPassword] = useState(false);
+  const schema = useMemo(() => loginSchema(t), [t]);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(schema),
   });
 
   return (
     <div className="w-full max-w-md mx-auto rounded-md bg-white p-8 border border-gray-300 shadow-sm">
       <div className="mb-10 flex flex-col items-center justify-center space-y-2 text-center">
-        <h1 className="text-xl font-bold text-gray-900">
-          Sign in
-        </h1>
-        <p className="mt-1 text-sm text-gray-400">
-          Enter your credentials to access your account.
-        </p>
+        <h1 className="text-xl font-bold text-gray-900">{t("title")}</h1>
+        <p className="mt-1 text-sm text-gray-400">{t("subtitle")}</p>
       </div>
 
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-        {/* Email */}
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            Email
+            {t("email")}
           </label>
           <input
             id="email"
@@ -57,10 +55,9 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
           )}
         </div>
 
-        {/* Password */}
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-            Password
+            {t("password")}
           </label>
           <div className="relative mt-1">
             <input
@@ -89,41 +86,36 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
           )}
         </div>
 
-        {/* Remember me + Forgot password */}
         <div className="flex items-center justify-between text-xs">
           <label className="flex items-center space-x-2 text-gray-600 cursor-pointer select-none">
             <input
               type="checkbox"
               className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
             />
-            <span>Remember me</span>
+            <span>{t("rememberMe")}</span>
           </label>
 
-          <Link
-            href="/forgot-password"
-            className="text-blue-500 hover:underline"
-          >
-            Forgot password?
+          <Link href="/forgot-password" className="text-blue-500 hover:underline">
+            {t("forgotPassword")}
           </Link>
         </div>
 
-        {/* Submit */}
         <button
           type="submit"
           disabled={isSubmitting}
           className="mt-2 w-full cursor-pointer rounded-md bg-gray-900 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50"
         >
-          {isSubmitting ? "Signing in..." : "Sign In"}
+          {isSubmitting ? t("submitting") : t("submit")}
         </button>
       </form>
 
       <div className="mt-6 text-center text-xs text-gray-400">
-        Don&apos;t have an account?{" "}
+        {t("noAccount")}{" "}
         <Link
           href="/register"
           className="font-medium text-blue-500 hover:underline"
         >
-          Create account
+          {t("createAccount")}
         </Link>
       </div>
     </div>
