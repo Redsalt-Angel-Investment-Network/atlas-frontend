@@ -8,7 +8,7 @@ import {
 } from "react";
 
 import { loginApi } from "@/app/(auth)/index";
-import { AuthContextType, AuthState, LoginPayload, LoginResponse, UserType } from "@/_types/auth";
+import { AuthContextType, AuthState, LoginPayload, LoginResponse, UserType, WorkspaceType } from "@/_types/auth";
 import { useEffect } from "react";
 import { parseCookies, setCookie, destroyCookie } from "nookies";
 
@@ -19,6 +19,7 @@ const INITIAL_STATE: AuthState = {
   user: null,
   accessToken: null,
   refreshToken: null,
+  workspaces: [],
 };
 
 export const cookieOptions = {
@@ -44,13 +45,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const user: UserType = JSON.parse(cookies.userData);
 
+        const workspaces: WorkspaceType[] = cookies.workspaces
+          ? JSON.parse(cookies.workspaces)
+          : [];
+
         setAuthState({
           user,
           accessToken: cookies.accessToken,
           refreshToken: cookies.refreshToken || null,
+          workspaces,
         });
       } catch (err) {
-        console.error("Failed to parse user cookie", err);
+        console.error("Failed to parse auth cookies", err);
       }
     }
 
@@ -58,17 +64,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   /* ========== ACTIONS ========== */
+  const currentWorkspace = authState.workspaces.find((workspace) => workspace.is_current) ?? null;
 
   const login = (data: LoginResponse) => {
-    const { user, access, refresh } = data;
+    const { user, access, refresh, workspaces } = data;
 
     setAuthState({
       user,
       accessToken: access,
       refreshToken: refresh,
+      workspaces,
     });
 
     setCookie(null, "userData", JSON.stringify(user), cookieOptions);
+    setCookie(null, "workspaces", JSON.stringify(workspaces), cookieOptions);
     setCookie(null, "accessToken", access, cookieOptions);
     setCookie(null, "refreshToken", refresh, cookieOptions);
   };
@@ -84,6 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         ...authState,
+        currentWorkspace,
         isAuthenticated: !!authState.accessToken,
         isLoading,
         login,

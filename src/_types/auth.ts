@@ -22,18 +22,30 @@ export type LoginPayload = {
   password: string;
 };
 
+export type WorkspaceType = {
+  workspace_id: string;
+  workspace_name: string;
+  role: string;
+  is_current: boolean;
+};
+
 export type LoginResponse = {
   access: string;
   refresh: string;
   user: UserType;
+  workspaces: WorkspaceType[];
 };
 
 export type AuthContextType = {
   user: UserType | null;
   accessToken: string | null;
   refreshToken: string | null;
+  workspaces: WorkspaceType[];
+  currentWorkspace: WorkspaceType | null;
+
   isAuthenticated: boolean;
   isLoading: boolean;
+
   login: (data: LoginResponse) => void;
   logout: () => void;
 };
@@ -42,4 +54,5 @@ export type AuthState = {
   user: UserType | null;
   accessToken: string | null;
   refreshToken: string | null;
+  workspaces: WorkspaceType[];
 };
