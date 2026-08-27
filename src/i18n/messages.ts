@@ -45,6 +45,21 @@ export const messages = {
       passwordMin: "Password must be at least 8 characters.",
       passwordMismatch: "Passwords do not match.",
     },
+    team: {
+      modals: {
+        deactivateMember: {
+          title: "Deactivate Member",
+          subtitle: "Are you sure you want to deactivate this member?",
+          description:
+            "Are you sure you want to deactivate this member? They will no longer have access to the team.",
+          warning:
+            "This will immediately revoke their access to the workspace and team resources. Their account data will be preserved, and you can reactivate them later.",
+          deactivating: "Deactivating...",
+          cancel: "Cancel",
+          deactivate: "Deactivate",
+        },
+      },
+    },
   },
   fr: {
     LocaleSwitcher: {
@@ -89,6 +104,21 @@ export const messages = {
       emailInvalid: "Veuillez entrer une adresse e-mail valide.",
       passwordMin: "Le mot de passe doit contenir au moins 8 caractères.",
       passwordMismatch: "Les mots de passe ne correspondent pas.",
+    },
+    team: {
+      modals: {
+        deactivateMember: {
+          title: "Désactiver le membre",
+          subtitle: "Êtes-vous sûr de vouloir désactiver ce membre ?",
+          description:
+            "Êtes-vous sûr de vouloir désactiver ce membre ? Il n'aura plus accès à l'équipe.",
+          warning:
+            "Cela révoquera immédiatement son accès à l'espace de travail et aux ressources de l'équipe. Ses données de compte seront conservées et vous pourrez le réactiver ultérieurement.",
+          deactivating: "Désactivation en cours...",
+          cancel: "Annuler",
+          deactivate: "Désactiver",
+        },
+      },
     },
   },
 };

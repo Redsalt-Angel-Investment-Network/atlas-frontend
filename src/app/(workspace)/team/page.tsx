@@ -40,6 +40,8 @@ import { WorkspaceMemberType } from "@/_types/workspaceMembers";
 import { getWorkspaceMembers } from "@/app/(workspace)/index";
 import { useAuth } from "@/app/_contexts/AuthContext";
 import { EditRoleModal } from "./components/EditRoleModal";
+import { MemberType, Role } from "@/_types/members";
+import { DeactivateMemberModal } from "./components/DeactivateMemberModal";
 
 const tableHeaders = [
   { label: "Member", className: "w-[300px]" },
@@ -74,6 +76,7 @@ export default function MembersPage() {
 
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<WorkspaceMemberType | null>(null);
+  const [deactivateModalOpen, setDeactivateModalOpen] = useState(false);
 
   const handleOpenEditModal = (member: WorkspaceMemberType) => {
     setSelectedMember(member);
@@ -97,6 +100,15 @@ export default function MembersPage() {
   useEffect(() => {
     fetchMembers();
   }, [workspaceId]);
+
+  const handleOpenDeactivateModal = (member: WorkspaceMemberType ) => {
+    setSelectedMember(member);
+    setDeactivateModalOpen(true);
+  };
+
+  const handleDeactivateMember = (memberId: string) => {
+    console.log(`Deactivated member ${memberId}`);
+  };
 
   // Interactive filtering
   const filteredMembers = members.filter((member) => {
@@ -326,7 +338,7 @@ export default function MembersPage() {
                             <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
                             Edit Role
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="gap-2 cursor-pointer text-destructive focus:text-destructive">
+                          <DropdownMenuItem onClick={() => handleOpenDeactivateModal(member) } className="gap-2 cursor-pointer text-destructive focus:text-destructive">
                             <Trash2 className="h-3.5 w-3.5" />
                             Deactivate
                           </DropdownMenuItem>
@@ -346,6 +358,14 @@ export default function MembersPage() {
           onOpenChange={setEditModalOpen}
           member={selectedMember}
           onSave={handleSaveRole}
+        />
+
+        {/* Deactivate Member Modal Component */}
+        <DeactivateMemberModal
+          open={deactivateModalOpen}
+          onOpenChange={setDeactivateModalOpen}
+          member={selectedMember}
+          onDeactivate={handleDeactivateMember}
         />
       </div>
     </div>
