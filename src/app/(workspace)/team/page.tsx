@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Plus,
   Search,
@@ -36,206 +36,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { WorkspaceMemberType } from "@/_types/workspaceMembers";
+import { getWorkspaceMembers } from "@/app/(workspace)/index";
+import { useAuth } from "@/app/_contexts/AuthContext";
 import { EditRoleModal } from "./components/EditRoleModal";
-import { Role } from "@/_types/members";
-
-// Mock Data
-const MOCK_MEMBERS = [
-  {
-    id: "1",
-    name: "Sarah Connor",
-    email: "sarah.connor@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150",
-    role: "admin" as Role,
-    status: "active",
-    dateJoined: "2024-01-15",
-  },
-  {
-    id: "2",
-    name: "Alex Johnson",
-    email: "alex.j@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150",
-    role: "member" as Role,
-    status: "active",
-    dateJoined: "2024-02-01",
-  },
-  {
-    id: "3",
-    name: "Michael Scott",
-    email: "m.scott@example.com",
-    avatar: "",
-    role: "member" as Role,
-    status: "inactive",
-    dateJoined: "2023-11-20",
-  },
-  {
-    id: "4",
-    name: "Elena Rostova",
-    email: "elena.r@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150",
-    role: "admin" as Role,
-    status: "active",
-    dateJoined: "2024-03-10",
-  },
-  {
-    id: "5",
-    name: "David Kim",
-    email: "david.kim@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150",
-    role: "member" as Role,
-    status: "active",
-    dateJoined: "2024-03-18",
-  },
-  {
-    id: "6",
-    name: "Amara Patel",
-    email: "amara.p@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
-    role: "member" as Role,
-    status: "active",
-    dateJoined: "2024-04-02",
-  },
-  {
-    id: "7",
-    name: "Lucas Vance",
-    email: "lucas.v@example.com",
-    avatar: "",
-    role: "member" as Role,
-    status: "inactive",
-    dateJoined: "2023-12-05",
-  },
-  {
-    id: "8",
-    name: "Sophia Martinez",
-    email: "sophia.m@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150",
-    role: "admin" as Role,
-    status: "active",
-    dateJoined: "2023-09-14",
-  },
-  {
-    id: "9",
-    name: "James Wilson",
-    email: "j.wilson@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
-    role: "member" as Role,
-    status: "active",
-    dateJoined: "2024-04-15",
-  },
-  {
-    id: "10",
-    name: "Olivia Chen",
-    email: "olivia.c@example.com",
-    avatar: "",
-    role: "member" as Role,
-    status: "active",
-    dateJoined: "2024-05-01",
-  },
-  {
-    id: "11",
-    name: "Marcus Brody",
-    email: "marcus.b@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150",
-    role: "admin" as Role,
-    status: "inactive",
-    dateJoined: "2023-08-22",
-  },
-  {
-    id: "12",
-    name: "Emma Watson",
-    email: "emma.w@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150",
-    role: "member" as Role,
-    status: "active",
-    dateJoined: "2024-05-12",
-  },
-  {
-    id: "13",
-    name: "Liam O'Connor",
-    email: "liam.oc@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
-    role: "member" as Role,
-    status: "active",
-    dateJoined: "2024-06-03",
-  },
-  {
-    id: "14",
-    name: "Nina Gomez",
-    email: "nina.g@example.com",
-    avatar: "",
-    role: "member" as Role,
-    status: "inactive",
-    dateJoined: "2024-01-28",
-  },
-  {
-    id: "15",
-    name: "Benjamin Hayes",
-    email: "ben.hayes@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150",
-    role: "admin" as Role,
-    status: "active",
-    dateJoined: "2023-10-11",
-  },
-  {
-    id: "16",
-    name: "Chloe Dubois",
-    email: "chloe.d@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150",
-    role: "member" as Role,
-    status: "active",
-    dateJoined: "2024-06-19",
-  },
-  {
-    id: "17",
-    name: "Tariq Al-Mansoor",
-    email: "tariq.a@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150",
-    role: "member" as Role,
-    status: "active",
-    dateJoined: "2024-07-02",
-  },
-  {
-    id: "18",
-    name: "Isabella Silva",
-    email: "isabella.s@example.com",
-    avatar: "",
-    role: "member" as Role,
-    status: "inactive",
-    dateJoined: "2024-02-14",
-  },
-  {
-    id: "19",
-    name: "Daniel Park",
-    email: "daniel.park@example.com",
-    avatar:
-      "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150",
-    role: "member" as Role,
-    status: "active",
-    dateJoined: "2024-07-20",
-  },
-  {
-    id: "20",
-    name: "Hannah Schmidt",
-    email: "hannah.s@example.com",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150",
-    role: "admin" as Role,
-    status: "active",
-    dateJoined: "2023-07-30",
-  },
-];
 
 const tableHeaders = [
   { label: "Member", className: "w-[300px]" },
@@ -259,16 +63,19 @@ const filters = {
 };
 
 export default function MembersPage() {
+  const { currentWorkspace } = useAuth();
+  const workspaceId = currentWorkspace?.workspace_id;
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [members, setMembers] = useState<WorkspaceMemberType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<
-    typeof MOCK_MEMBERS[0] | null
-  >(null);
+  const [selectedMember, setSelectedMember] = useState<WorkspaceMemberType | null>(null);
 
-  const handleOpenEditModal = (member: typeof MOCK_MEMBERS[0]) => {
+  const handleOpenEditModal = (member: WorkspaceMemberType) => {
     setSelectedMember(member);
     setEditModalOpen(true);
   };
@@ -277,17 +84,34 @@ export default function MembersPage() {
     console.log(`Updated member ${memberId} role to ${newRole}`);
   };
 
-  // Interactive filtering for demo purposes
-  const filteredMembers = MOCK_MEMBERS.filter((member) => {
+  const fetchMembers = async () => {
+    if (!workspaceId) return;
+    setLoading(true);
+    setError(null);
+    getWorkspaceMembers(workspaceId)
+      .then(setMembers)
+      .catch((err) => setError(err.message ?? "Failed to load members"))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchMembers();
+  }, [workspaceId]);
+
+  // Interactive filtering
+  const filteredMembers = members.filter((member) => {
     const search = searchTerm.toLowerCase().trim();
+
     const matchesSearch =
-      !search ||
+      !search || 
       member.name.toLowerCase().includes(search) ||
       member.email.toLowerCase().includes(search);
 
-    const matchesRole = roleFilter === "all" || member.role === roleFilter;
     const matchesStatus =
-      statusFilter === "all" || member.status === statusFilter;
+      statusFilter === "all" ||
+      (statusFilter === "active" ? !member.is_deleted : member.is_deleted);
+
+    const matchesRole = roleFilter === "all" || member.role === roleFilter;
 
     return matchesSearch && matchesRole && matchesStatus;
   });
@@ -389,7 +213,25 @@ export default function MembersPage() {
         <div className="overflow-y-auto flex-1">
           <Table className="table-fixed w-full">
             <TableBody>
-              {filteredMembers.length === 0 ? (
+              {loading ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="h-32 text-center text-sm text-muted-foreground"
+                  >
+                    Loading members....
+                  </TableCell>
+                </TableRow>
+              ) : error ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="h-32 text-center text-sm text-destructive"
+                  >
+                    {error}
+                  </TableCell>
+                </TableRow>
+              ) : filteredMembers.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={5}
@@ -408,7 +250,6 @@ export default function MembersPage() {
                     <TableCell className="py-3">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-9 w-9 border border-border/40 shrink-0">
-                          <AvatarImage src={member.avatar} alt={member.name} />
                           <AvatarFallback className="bg-muted text-muted-foreground font-medium text-xs">
                             <User className="h-4 w-4" />
                           </AvatarFallback>
@@ -448,19 +289,19 @@ export default function MembersPage() {
                       <Badge
                         variant="outline"
                         className={`capitalize text-xs font-medium ${
-                          member.status === "active"
+                          !member.is_deleted
                             ? "border-emerald-500/30 text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 dark:text-emerald-400"
                             : "border-destructive/30 text-destructive bg-destructive/10"
                         }`}
                       >
-                        {member.status}
+                        {member.is_deleted ? "inactive" : "active"}
                       </Badge>
                     </TableCell>
 
                     {/* Date Joined */}
                     <TableCell className="py-3">
                       <span className="text-sm text-muted-foreground tabular-nums whitespace-nowrap">
-                        {member.dateJoined}
+                        {new Date(member.created_at).toLocaleDateString()}
                       </span>
                     </TableCell>
 
@@ -478,7 +319,10 @@ export default function MembersPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-40">
-                          <DropdownMenuItem className="gap-2 cursor-pointer" onClick={() => handleOpenEditModal(member)}>
+                          <DropdownMenuItem
+                            className="gap-2 cursor-pointer"
+                            onClick={() => handleOpenEditModal(member)}
+                          >
                             <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
                             Edit Role
                           </DropdownMenuItem>
