@@ -22,6 +22,10 @@ export type LoginPayload = {
   password: string;
 };
 
+export type LogoutPayload = {
+  refresh: string;
+};
+
 export type WorkspaceType = {
   workspace_id: string;
   workspace_name: string;

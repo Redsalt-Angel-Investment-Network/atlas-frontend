@@ -6,6 +6,28 @@ export const messages = {
     LocaleSwitcher: {
       switchTo: "Switch to {language}",
     },
+    topNav: {
+      home: "Home",
+      team: "Team",
+      breadcrumbs: {
+        home: "Home",
+        team: "Team",
+      },
+      toggleTheme: "Toggle theme",
+      light: "Light",
+      dark: "Dark",
+      system: "System",
+      notifications: "Notifications",
+      markAllRead: "Mark all read",
+      viewAllActivity: "View all activity",
+      upgradePlan: "Upgrade Plan",
+      profile: "Profile",
+      settings: "Settings",
+      security: "Security",
+      logOut: "Log out",
+      loggedOutSuccessfully: "Logged out successfully",
+      logoutFailed: "Unable to log out. Please try again."
+    },
     Login: {
       title: "Sign in",
       subtitle: "Enter your credentials to access your account.",
@@ -64,6 +86,28 @@ export const messages = {
   fr: {
     LocaleSwitcher: {
       switchTo: "Passer en {language}",
+    },
+    topNav: {
+      home: "Accueil",
+      team: "Équipe",
+      breadcrumbs: {
+        home: "Accueil",
+        team: "Équipe",
+      },
+      toggleTheme: "Changer le thème",
+      light: "Clair",
+      dark: "Sombre",
+      system: "Système",
+      notifications: "Notifications",
+      markAllRead: "Tout marquer comme lu",
+      viewAllActivity: "Voir toute l’activité",
+      upgradePlan: "Mettre à niveau l’abonnement",
+      profile: "Profil",
+      settings: "Paramètres",
+      security: "Sécurité",
+      logOut: "Se déconnecter",
+      loggedOutSuccessfully: "Déconnexion réussie",
+      logoutFailed: "Impossible de se déconnecter. Veuillez réessayer."
     },
     Login: {
       title: "Connexion",
