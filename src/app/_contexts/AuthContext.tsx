@@ -64,7 +64,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   /* ========== ACTIONS ========== */
-  const currentWorkspace = authState.workspaces.find((workspace) => workspace.is_current) ?? null;
+
+  const currentWorkspace =
+    authState.workspaces.find(
+      (workspace) => workspace.is_current,
+    ) ?? null;
 
   const login = (data: LoginResponse) => {
     const { user, access, refresh, workspaces } = data;
@@ -82,13 +86,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setCookie(null, "refreshToken", refresh, cookieOptions);
   };
 
+  const setWorkspaces = (workspaces: WorkspaceType[]) => {
+    setAuthState((previousState) => ({
+      ...previousState,
+      workspaces,
+    }));
+
+    setCookie(
+      null,
+      "workspaces",
+      JSON.stringify(workspaces),
+      cookieOptions,
+    );
+  };
+
   const logout = () => {
     destroyCookie(null, "userData", { path: "/" });
     destroyCookie(null, "accessToken", { path: "/" });
     destroyCookie(null, "refreshToken", { path: "/" });
+    destroyCookie(null, "workspaces", { path: "/" });
 
     setAuthState(INITIAL_STATE);
   };
+
   return (
     <AuthContext.Provider
       value={{
@@ -98,6 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLoading,
         login,
         logout,
+        setWorkspaces,
       }}
     >
       {children}
@@ -107,8 +128,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
+
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
+
   return context;
 }

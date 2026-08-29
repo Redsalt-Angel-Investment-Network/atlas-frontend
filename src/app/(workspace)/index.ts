@@ -1,4 +1,3 @@
-import { WorkspaceType } from "@/_types/workspace";
 import { WorkspaceMemberType } from "@/_types/workspaceMembers";
 import { authFetch } from "@/utils/apiClient";
 
@@ -13,5 +12,21 @@ export async function getWorkspaceMembers(
   }
 
   const data: WorkspaceMemberType[] = await res.json();
+  return data;
+}
+
+export async function getWorkspaceMemberships(): Promise<WorkspaceMemberType[]> {
+  const res = await authFetch("/workspace/memberships");
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+
+    throw new Error(
+      errorData?.message || "Failed to fetch workspace memberships",
+    );
+  }
+
+  const data: WorkspaceMemberType[] = await res.json();
+
   return data;
 }

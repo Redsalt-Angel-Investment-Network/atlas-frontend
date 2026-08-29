@@ -28,6 +28,23 @@ export const messages = {
       loggedOutSuccessfully: "Logged out successfully",
       logoutFailed: "Unable to log out. Please try again."
     },
+    sidebar: {
+      switchWorkspace: "Switch Workspace",
+      selectWorkspace: "Select workspace",
+      loading: "Loading...",
+      createWorkspace: "Create new workspace",
+      failedToLoadWorkspaces: "Failed to load workspaces",
+      overview: "Overview",
+      workflows: "Workflows",
+      aiAgents: "AI Agents",
+      executionsAndLogs: "Executions & Logs",
+      toolsAndConnectors: "Tools & Connectors",
+      sharedWorkflows: "Shared Workflows",
+      teamAndPermissions: "Team & Permissions",
+      settings: "Settings",
+      invitePeople: "Invite people",
+      helpAndGuides: "Help & guides"
+    },
     Login: {
       title: "Sign in",
       subtitle: "Enter your credentials to access your account.",
@@ -108,6 +125,23 @@ export const messages = {
       logOut: "Se déconnecter",
       loggedOutSuccessfully: "Déconnexion réussie",
       logoutFailed: "Impossible de se déconnecter. Veuillez réessayer."
+    },
+    sidebar: {
+      switchWorkspace: "Changer d’espace de travail",
+      selectWorkspace: "Sélectionner un espace de travail",
+      loading: "Chargement...",
+      createWorkspace: "Créer un nouvel espace de travail",
+      overview: "Vue d’ensemble",
+      workflows: "Flux de travail",
+      aiAgents: "Agents IA",
+      executionsAndLogs: "Exécutions et journaux",
+      toolsAndConnectors: "Outils et connecteurs",
+      sharedWorkflows: "Flux de travail partagés",
+      teamAndPermissions: "Équipe et autorisations",
+      settings: "Paramètres",
+      invitePeople: "Inviter des personnes",
+      helpAndGuides: "Aide et guides",
+      failedToLoadWorkspaces: "Échec du chargement des espaces de travail"
     },
     Login: {
       title: "Connexion",

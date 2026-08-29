@@ -52,6 +52,8 @@ export type AuthContextType = {
 
   login: (data: LoginResponse) => void;
   logout: () => void;
+
+  setWorkspaces: (workspaces: WorkspaceType[]) => void;
 };
 
 export type AuthState = {
