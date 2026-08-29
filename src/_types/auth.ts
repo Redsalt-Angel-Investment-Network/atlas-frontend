@@ -1,3 +1,5 @@
+import { WorkspaceMemberType } from "./workspaceMembers";
+
 export type RegisterPayload = {
   email: string;
   first_name: string;
@@ -26,26 +28,19 @@ export type LogoutPayload = {
   refresh: string;
 };
 
-export type WorkspaceType = {
-  workspace_id: string;
-  workspace_name: string;
-  role: string;
-  is_current: boolean;
-};
-
 export type LoginResponse = {
   access: string;
   refresh: string;
   user: UserType;
-  workspaces: WorkspaceType[];
+  memberships: WorkspaceMemberType[];
 };
 
 export type AuthContextType = {
   user: UserType | null;
   accessToken: string | null;
   refreshToken: string | null;
-  workspaces: WorkspaceType[];
-  currentWorkspace: WorkspaceType | null;
+  memberships: WorkspaceMemberType[];
+  currentMembership: WorkspaceMemberType | null;
 
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -53,12 +48,13 @@ export type AuthContextType = {
   login: (data: LoginResponse) => void;
   logout: () => void;
 
-  setWorkspaces: (workspaces: WorkspaceType[]) => void;
+  setMemberships: (memberships: WorkspaceMemberType[]) => void;
+  switchWorkspace: (Id: string) => void;
 };
 
 export type AuthState = {
   user: UserType | null;
   accessToken: string | null;
   refreshToken: string | null;
-  workspaces: WorkspaceType[];
+  memberships: WorkspaceMemberType[];
 };

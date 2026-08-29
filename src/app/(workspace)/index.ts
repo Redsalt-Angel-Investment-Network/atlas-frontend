@@ -30,3 +30,24 @@ export async function getWorkspaceMemberships(): Promise<WorkspaceMemberType[]> 
 
   return data;
 }
+
+export async function switchWorkspaceApi(membershipId: string,): Promise<WorkspaceMemberType> {
+  const res = await authFetch("/workspace/switch/", {
+    method: "POST",
+    body: JSON.stringify({
+      membership_id: membershipId,
+    }),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+
+    throw new Error(
+      errorData?.message || "Failed to switch workspace",
+    );
+  }
+
+  const data: WorkspaceMemberType = await res.json();
+
+  return data;
+}

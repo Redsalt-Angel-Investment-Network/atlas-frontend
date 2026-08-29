@@ -6,20 +6,22 @@ import {
   useState,
   type ReactNode,
 } from "react";
-
-import { loginApi } from "@/app/(auth)/index";
-import { AuthContextType, AuthState, LoginPayload, LoginResponse, UserType, WorkspaceType } from "@/_types/auth";
 import { useEffect } from "react";
 import { parseCookies, setCookie, destroyCookie } from "nookies";
 
-
-/* ================= CONFIG ================= */
+import {
+  AuthContextType,
+  AuthState,
+  LoginResponse,
+  UserType,
+} from "@/_types/auth";
+import { WorkspaceMemberType } from "@/_types/workspaceMembers";
 
 const INITIAL_STATE: AuthState = {
   user: null,
   accessToken: null,
   refreshToken: null,
-  workspaces: [],
+  memberships: [],
 };
 
 export const cookieOptions = {
@@ -29,15 +31,12 @@ export const cookieOptions = {
   sameSite: "lax" as const,
 };
 
-/* ================= CONTEXT ================= */
-
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [authState, setAuthState] = useState<AuthState>(INITIAL_STATE);
   const [isLoading, setIsLoading] = useState(true);
 
-  /* ========== RESTORE FROM COOKIES ON MOUNT ========== */
   useEffect(() => {
     const cookies = parseCookies();
 
@@ -45,15 +44,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const user: UserType = JSON.parse(cookies.userData);
 
-        const workspaces: WorkspaceType[] = cookies.workspaces
-          ? JSON.parse(cookies.workspaces)
+        const memberships: WorkspaceMemberType[] = cookies.memberships
+          ? JSON.parse(cookies.memberships)
           : [];
 
         setAuthState({
           user,
           accessToken: cookies.accessToken,
           refreshToken: cookies.refreshToken || null,
-          workspaces,
+          memberships,
         });
       } catch (err) {
         console.error("Failed to parse auth cookies", err);
@@ -63,39 +62,58 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  /* ========== ACTIONS ========== */
-
-  const currentWorkspace =
-    authState.workspaces.find(
+  const currentMembership =
+    authState.memberships.find(
       (workspace) => workspace.is_current,
     ) ?? null;
 
   const login = (data: LoginResponse) => {
-    const { user, access, refresh, workspaces } = data;
+    const { user, access, refresh, memberships } = data;
 
     setAuthState({
       user,
       accessToken: access,
       refreshToken: refresh,
-      workspaces,
+      memberships,
     });
 
     setCookie(null, "userData", JSON.stringify(user), cookieOptions);
-    setCookie(null, "workspaces", JSON.stringify(workspaces), cookieOptions);
+    setCookie(null, "memberships", JSON.stringify(memberships), cookieOptions);
     setCookie(null, "accessToken", access, cookieOptions);
     setCookie(null, "refreshToken", refresh, cookieOptions);
   };
 
-  const setWorkspaces = (workspaces: WorkspaceType[]) => {
+  const setMemberships = (memberships: WorkspaceMemberType[]) => {
     setAuthState((previousState) => ({
       ...previousState,
-      workspaces,
+      memberships,
     }));
 
     setCookie(
       null,
-      "workspaces",
-      JSON.stringify(workspaces),
+      "memberships",
+      JSON.stringify(memberships),
+      cookieOptions,
+    );
+  };
+
+  const switchWorkspace = (membershipId: string) => {
+    const updatedMemberships = authState.memberships.map(
+      (workspace) => ({
+        ...workspace,
+        is_current: workspace.id === membershipId,
+      }),
+    );
+
+    setAuthState((previousState) => ({
+      ...previousState,
+      memberships: updatedMemberships,
+    }));
+
+    setCookie(
+      null,
+      "memberships",
+      JSON.stringify(updatedMemberships),
       cookieOptions,
     );
   };
@@ -104,7 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     destroyCookie(null, "userData", { path: "/" });
     destroyCookie(null, "accessToken", { path: "/" });
     destroyCookie(null, "refreshToken", { path: "/" });
-    destroyCookie(null, "workspaces", { path: "/" });
+    destroyCookie(null, "memberships", { path: "/" });
 
     setAuthState(INITIAL_STATE);
   };
@@ -113,12 +131,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         ...authState,
-        currentWorkspace,
+        currentMembership,
         isAuthenticated: !!authState.accessToken,
         isLoading,
         login,
         logout,
-        setWorkspaces,
+        setMemberships,
+        switchWorkspace,
       }}
     >
       {children}

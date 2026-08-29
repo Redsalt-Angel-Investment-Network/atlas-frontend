@@ -65,8 +65,8 @@ const filters = {
 };
 
 export default function MembersPage() {
-  const { currentWorkspace } = useAuth();
-  const workspaceId = currentWorkspace?.workspace_id;
+  const { currentMembership } = useAuth();
+  const workspaceId = currentMembership?.workspace_id;
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
