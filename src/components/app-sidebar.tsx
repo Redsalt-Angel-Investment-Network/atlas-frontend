@@ -18,6 +18,7 @@ import {
   UserPlus,
   HelpCircle,
   FolderTree,
+  Database,
 } from "lucide-react"
 
 import {
@@ -55,6 +56,11 @@ const getMainNavItems = (t: (key: string) => string) => [
     url: "/",
     icon: LayoutDashboard,
     active: true,
+  },
+  {
+    title: t("entities"),
+    url: "/entities",
+    icon: Database,
   },
   {
     title: t("workflows"),
