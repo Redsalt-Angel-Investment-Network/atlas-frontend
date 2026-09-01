@@ -101,6 +101,38 @@ export const messages = {
         },
       },
     },
+    categories: {
+      title: "Category Schemas",
+      description:
+        "Define, structure, and manage attribute schemas across your workspace categories.",
+      createSchema: "Create Schema",
+      searchPlaceholder: "Search schemas by name or key...",
+      filter: "Filter",
+      propertiesCount: "{count, plural, =1 {1 property} other {# properties}}",
+      table: {
+        schemaName: "Schema Name",
+        description: "Description",
+        fields: "Fields",
+        status: "Status",
+        lastUpdated: "Last Updated",
+        actions: "Actions"
+      },
+      status: {
+        allStatuses: "All Statuses",
+        active: "Active",
+        inactive: "Inactive",
+      },
+      emptyState: {
+        title: "No schemas found",
+        searchNoResults: "Try matching a different keyword.",
+        noData: "Get started by creating your first category schema.",
+      },
+      actions: {
+        srLabel: "Actions",
+        edit: "Edit Schema",
+        delete: "Delete",
+      },
+    },
   },
   fr: {
     LocaleSwitcher: {
@@ -200,6 +232,39 @@ export const messages = {
           cancel: "Annuler",
           deactivate: "Désactiver",
         },
+      },
+    },
+    categories: {
+      title: "Schémas de catégories",
+      description:
+        "Définissez, structurez et gérez les schémas d'attributs dans les catégories de votre espace de travail.",
+      createSchema: "Créer un schéma",
+      searchPlaceholder: "Rechercher des schémas par nom ou clé...",
+      filter: "Filtrer",
+      propertiesCount:
+        "{count, plural, =0 {0 propriété} =1 {1 propriété} other {# propriétés}}",
+      table: {
+        schemaName: "Nom du schéma",
+        description: "Description",
+        fields: "Champs",
+        status: "Statut",
+        lastUpdated: "Dernière mise à jour",
+        actions: "Actes"
+      },
+      status: {
+        allStatuses: "Tous les statuts",
+        active: "Actif",
+        inactive: "Inactif",
+      },
+      emptyState: {
+        title: "Aucun schéma trouvé",
+        searchNoResults: "Essayez avec un autre mot-clé.",
+        noData: "Commencez par créer votre premier schéma de catégorie.",
+      },
+      actions: {
+        srLabel: "Actions",
+        edit: "Modifier le schéma",
+        delete: "Supprimer",
       },
     },
   },

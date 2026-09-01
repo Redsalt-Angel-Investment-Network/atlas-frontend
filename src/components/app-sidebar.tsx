@@ -70,7 +70,7 @@ const getMainNavItems = (t: (key: string) => string) => [
   },
   {
     title: t("categorySchemas"), 
-    url: "/schemas",             
+    url: "/categories",             
     icon: FolderTree,
   },
   {
