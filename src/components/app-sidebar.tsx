@@ -17,6 +17,7 @@ import {
   Settings,
   UserPlus,
   HelpCircle,
+  FolderTree,
 } from "lucide-react"
 
 import {
@@ -60,6 +61,11 @@ const getMainNavItems = (t: (key: string) => string) => [
     url: "/workflows",
     icon: Workflow,
     hasDot: true,
+  },
+  {
+    title: t("categorySchemas"), 
+    url: "/schemas",             
+    icon: FolderTree,
   },
   {
     title: t("aiAgents"),
