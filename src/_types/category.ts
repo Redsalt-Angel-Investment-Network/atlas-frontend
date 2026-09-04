@@ -22,3 +22,10 @@ export type CategoryType = {
   created_at: string;
   updated_at: string;
 };
+
+export type CreateCategoryPayload = {
+  name: string;
+  description?: string;
+  is_active: boolean;
+  schema: CategorySchemaFieldsType[];
+};

@@ -1,4 +1,4 @@
-import { CategoryType } from "@/_types/category";
+import { CategoryType, CreateCategoryPayload } from "@/_types/category";
 import { Entity } from "@/_types/entities";
 import { WorkspaceMemberType } from "@/_types/workspaceMembers";
 import { authFetch } from "@/utils/apiClient";
@@ -82,5 +82,22 @@ export async function getEntitiesApi(
   }
 
   const data: Entity[] = await res.json();
+  return data;
+}
+
+export async function createCategoryApi(
+  categoryCreateData: CreateCategoryPayload,
+): Promise<CategoryType> {
+  const res = await authFetch("/categories/", {
+    method: "POST",
+    body: JSON.stringify(categoryCreateData),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData?.message || "Failed to create categories");
+  }
+
+  const data: CategoryType = await res.json();
   return data;
 }

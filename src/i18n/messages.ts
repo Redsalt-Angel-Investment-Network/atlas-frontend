@@ -102,15 +102,15 @@ export const messages = {
       },
     },
     categories: {
-      title: "Category Schemas",
+      title: "Categories",
       description:
         "Define, structure, and manage attribute schemas across your workspace categories.",
-      createSchema: "Create Schema",
-      searchPlaceholder: "Search schemas by name or key...",
+      createSchema: "Create Category",
+      searchPlaceholder: "Search categories by name or key...",
       filter: "Filter",
       propertiesCount: "{count, plural, =1 {1 property} other {# properties}}",
       table: {
-        schemaName: "Schema Name",
+        schemaName: "Category Name",
         description: "Description",
         fields: "Fields",
         status: "Status",
@@ -123,14 +123,88 @@ export const messages = {
         inactive: "Inactive",
       },
       emptyState: {
-        title: "No schemas found",
+        title: "No categories found",
         searchNoResults: "Try matching a different keyword.",
-        noData: "Get started by creating your first category schema.",
+        noData: "Get started by creating your first category.",
       },
       actions: {
         srLabel: "Actions",
-        edit: "Edit Schema",
+        edit: "Edit Category ",
         delete: "Delete",
+      },
+      createCategoryForm: {
+        title: "Create Category",
+        description:
+          "Configure category metadata and define dynamic schema fields.",
+        basicDetails: "Basic Details",
+        fields: {
+          name: {
+            label: "Category Name",
+            placeholder: "e.g. Laptops & Computers",
+            required: "Category name is required",
+            maxLength: "Name must be less than 100 characters",
+          },
+          slug: {
+            label: "Slug",
+            placeholder: "laptops-computers",
+            required: "Slug is required",
+            pattern: "Lowercase letters, numbers, and hyphens only",
+          },
+          reference: {
+            label: "Reference Code",
+            placeholder: "CAT-HW-001",
+            required: "Reference code is required",
+            maxLength: "Reference code must be under 50 characters",
+          },
+          description: {
+            label: "Description",
+            placeholder: "Brief description of this category...",
+            maxLength: "Description must be under 500 characters",
+          },
+          isActive: {
+            label: "Active Status",
+            description: "Enable visibility across workspace workflows",
+          },
+        },
+        schemaFields: {
+          title: "Schema Fields",
+          subtitle: "Define properties required for items in this category.",
+          addField: "Add Field",
+          emptyState:
+            'No custom fields added yet. Click "Add Field" to configure schema attributes.',
+          keyPlaceholder: "field_key (e.g. serial_number)",
+          keyRequired: "Field key is required",
+          keyPattern: "Letters, numbers, and underscores only",
+          typeSelectPlaceholder: "Type",
+          typeRequired: "Type is required",
+          requiredShort: "Req",
+          types: {
+            text: "Text",
+            number: "Number",
+            boolean: "Boolean",
+            date: "Date",
+            json: "JSON",
+            select: "Select",
+          },
+        },
+        buttons: {
+          cancel: "Cancel",
+          submit: "Create Category",
+          submitting: "Creating...",
+        },
+        zodValidation: {
+          nameRequired: "Category name is required",
+          nameMaxLength: "Category name must be less than 100 characters",
+          descriptionMaxLength: "Description must be less than 500 characters",
+          typeRequired: "Field type is required",
+          regexPattern: "Use letters, numbers, and underscores only",
+          fieldNameRequired: "Field name is required",
+          
+        },
+        toast: {
+          success: "Category created successfully.",
+          error: "Failed to create category. Please try again.",
+        },
       },
     },
     entities: {
@@ -276,21 +350,21 @@ export const messages = {
       },
     },
     categories: {
-      title: "Schémas de catégories",
+      title: "Catégories",
       description:
         "Définissez, structurez et gérez les schémas d'attributs dans les catégories de votre espace de travail.",
-      createSchema: "Créer un schéma",
-      searchPlaceholder: "Rechercher des schémas par nom ou clé...",
+      createSchema: "Créer une catégorie",
+      searchPlaceholder: "Rechercher des catégories par nom ou clé...",
       filter: "Filtrer",
       propertiesCount:
         "{count, plural, =0 {0 propriété} =1 {1 propriété} other {# propriétés}}",
       table: {
-        schemaName: "Nom du schéma",
+        schemaName: "Nom du catégorie",
         description: "Description",
         fields: "Champs",
         status: "Statut",
         lastUpdated: "Dernière mise à jour",
-        actions: "Actes"
+        actions: "Actes",
       },
       status: {
         allStatuses: "Tous les statuts",
@@ -298,14 +372,90 @@ export const messages = {
         inactive: "Inactif",
       },
       emptyState: {
-        title: "Aucun schéma trouvé",
+        title: "Aucune catégorie trouvée",
         searchNoResults: "Essayez avec un autre mot-clé.",
-        noData: "Commencez par créer votre premier schéma de catégorie.",
+        noData: "Commencez par créer votre première catégorie.",
       },
       actions: {
         srLabel: "Actions",
-        edit: "Modifier le schéma",
+        edit: "Modifier la catégorie",
         delete: "Supprimer",
+      },
+      createCategoryForm: {
+        title: "Créer une catégorie",
+        description:
+          "Configurer les métadonnées de la catégorie et définir les champs de schéma dynamiques.",
+        basicDetails: "Informations de base",
+        fields: {
+          name: {
+            label: "Nom de la catégorie",
+            placeholder: "ex. Ordinateurs portables",
+            required: "Le nom de la catégorie est requis",
+            maxLength: "Le nom doit contenir moins de 100 caractères",
+          },
+          slug: {
+            label: "Slug",
+            placeholder: "ordinateurs-portables",
+            required: "Le slug est requis",
+            pattern: "Lettres minuscules, chiffres et tirets uniquement",
+          },
+          reference: {
+            label: "Code de référence",
+            placeholder: "CAT-MAT-001",
+            required: "Le code de référence est requis",
+            maxLength:
+              "Le code de référence doit contenir moins de 50 caractères",
+          },
+          description: {
+            label: "Description",
+            placeholder: "Brève description de cette catégorie...",
+            maxLength: "La description doit contenir moins de 500 caractères",
+          },
+          isActive: {
+            label: "Statut actif",
+            description:
+              "Activer la visibilité dans les flux de travail de l'espace de travail",
+          },
+        },
+        schemaFields: {
+          title: "Champs du schéma",
+          subtitle:
+            "Définir les propriétés requises pour les éléments de cette catégorie.",
+          addField: "Ajouter un champ",
+          emptyState:
+            'Aucun champ personnalisé ajouté. Cliquez sur "Ajouter un champ" pour configurer les attributs du schéma.',
+          keyPlaceholder: "clé_champ (ex. numero_serie)",
+          keyRequired: "La clé du champ est requise",
+          keyPattern: "Lettres, chiffres et underscores uniquement",
+          typeSelectPlaceholder: "Type",
+          typeRequired: "Le type est requis",
+          requiredShort: "Obl",
+          types: {
+            text: "Texte",
+            number: "Nombre",
+            boolean: "Booléen",
+            date: "Date",
+            json: "JSON",
+            select: "Sélection",
+          },
+        },
+        buttons: {
+          cancel: "Annuler",
+          submit: "Créer une catégorie",
+          submitting: "Création en cours...",
+        },
+        zodValidation: {
+          nameRequired: "Le nom de la catégorie est requis",
+          nameMaxLength: "Le nom de la catégorie doit contenir moins de 100 caractères",
+          descriptionMaxLength: "La description doit contenir moins de 500 caractères",
+          typeRequired: "Le type de champ est requis",
+          regexPattern: "Utilisez uniquement des lettres, des chiffres et des underscores",
+          fieldNameRequired: "Le nom du champ est requis",
+        },
+        toast: {
+          success: "Catégorie créée avec succès.",
+          error: "Échec de la création de la catégorie. Veuillez réessayer.",
+        },
       },
     },
      entities: {

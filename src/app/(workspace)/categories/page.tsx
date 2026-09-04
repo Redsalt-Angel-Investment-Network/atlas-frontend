@@ -39,8 +39,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CategoryType } from "@/_types/category";
-import { getCategoryApi } from "@/app/(workspace)/index";
+import { CategoryType, CreateCategoryPayload } from "@/_types/category";
+import { createCategoryApi, getCategoryApi } from "@/app/(workspace)/index";
+import { CreateCategoryDrawer } from "./components/CreateCategoryForm";
+import { toast } from "sonner";
 
 
 
@@ -52,6 +54,7 @@ export default function SchemasListPage() {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [openCreateCategoryDrawer, setopenCreateCategoryDrawer] = useState(false);
 
   const fetchCategories = async () => {
       setLoading(true);
@@ -65,6 +68,24 @@ export default function SchemasListPage() {
     useEffect(() => {
       fetchCategories();
     }, []);
+
+  const handleCreateCategory = async (
+    data: CreateCategoryPayload,
+  ): Promise<void> => {
+    try {
+      const newCategory = await createCategoryApi(data);
+
+      setCategories((prev: CategoryType[]) => [newCategory, ...prev]);
+
+      setopenCreateCategoryDrawer(false);
+
+      toast.success(t("createCategoryForm.toast.success"));
+    } catch (err: any) {
+      toast.error(t("createCategoryForm.toast.error"));
+
+      throw err;
+    }
+  };
 
   const filteredCategories = useMemo(() => {
     return categories.filter((category) => {
@@ -130,13 +151,11 @@ export default function SchemasListPage() {
           <p className="text-sm text-muted-foreground">{t("description")}</p>
         </div>
         <Button
-          asChild
           className="font-medium gap-2"
+          onClick={() => setopenCreateCategoryDrawer(true)}
         >
-          <Link href="/categories/new">
-            <Plus className="h-4 w-4" />
-            {t("createSchema")}
-          </Link>
+          <Plus className="h-4 w-4" />
+          {t("createSchema")}
         </Button>
       </div>
 
@@ -317,6 +336,13 @@ export default function SchemasListPage() {
           </Table>
         </div>
       </div>
+
+      {/* Create Category Drawer */}
+      <CreateCategoryDrawer
+        isOpen={openCreateCategoryDrawer}
+        onOpenChange={setopenCreateCategoryDrawer}
+        onSubmitApi={handleCreateCategory}
+      />
     </div>
   );
 }
