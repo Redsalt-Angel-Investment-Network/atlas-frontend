@@ -1,10 +1,8 @@
 export type CategorySchemaFieldsType = {
-  id: string;
   name: string;
   type: string;
   required: boolean;
   position: number;
-  definition: Record<string, any>;
 };
 
 export type CategorySchemaType = {

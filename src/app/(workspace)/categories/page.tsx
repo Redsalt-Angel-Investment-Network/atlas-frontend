@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import {
@@ -40,108 +40,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CategoryType } from "@/_types/category";
+import { getCategoryApi } from "@/app/(workspace)/index";
 
-const MOCK_CATEGORIES: CategoryType[] = [
-  {
-    id: "schema_1",
-    workspace_id: "workspace_1",
-    name: "E-commerce Product",
-    slug: "ecommerce_product",
-    reference: "CAT2026849101",
-    description:
-      "Defines attributes like SKU, price, stock, and variants for shop items.",
-    is_active: true,
-    schema: {
-      version: 1,
-      fields: [
-        {
-          id: "field_1",
-          name: "title",
-          type: "text",
-          required: true,
-          position: 1,
-          definition: { label: "Product Title", is_identifier: true },
-        },
-        {
-          id: "field_2",
-          name: "price",
-          type: "number",
-          required: true,
-          position: 2,
-          definition: { label: "Price ($)", min_value: 0 },
-        },
-      ],
-    },
-    created_at: "2026-08-28T10:00:00Z",
-    updated_at: "2026-08-28T10:00:00Z",
-  },
-  {
-    id: "schema_2",
-    workspace_id: "workspace_1",
-    name: "Support Ticket",
-    slug: "support_ticket",
-    reference: "CAT2026849102",
-    description:
-      "Category for customer support requests, priority flags, and assignments.",
-    is_active: false,
-    schema: {
-      version: 1,
-      fields: [
-        {
-          id: "field_1",
-          name: "ticket_id",
-          type: "text",
-          required: true,
-          position: 1,
-          definition: { label: "Ticket ID", is_identifier: true },
-        },
-        {
-          id: "field_2",
-          name: "priority",
-          type: "text",
-          required: true,
-          position: 2,
-          definition: { label: "Priority", options: ["low", "medium", "high"] },
-        },
-      ],
-    },
-    created_at: "2026-08-25T10:00:00Z",
-    updated_at: "2026-08-25T10:00:00Z",
-  },
-  {
-    id: "schema_3",
-    workspace_id: "workspace_1",
-    name: "User Profile Metadata",
-    slug: "user_profile_meta",
-    reference: "CAT2026849103",
-    description:
-      "Custom user traits, preferences, and workspace permission overrides.",
-    is_active: true,
-    schema: {
-      version: 1,
-      fields: [
-        {
-          id: "field_1",
-          name: "user_id",
-          type: "text",
-          required: true,
-          position: 1,
-          definition: { label: "User ID", is_identifier: true },
-        },
-        {
-          id: "field_2",
-          name: "preferences",
-          type: "json",
-          required: false,
-          position: 2,
-          definition: { label: "User Preferences" },
-        },
-      ],
-    },
-    created_at: "2026-08-10T10:00:00Z",
-    updated_at: "2026-08-10T10:00:00Z",
-  },
-];
 
 
 
@@ -149,7 +49,22 @@ export default function SchemasListPage() {
   const t = useTranslations("categories");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [categories, setCategories] = useState<CategoryType[]>(MOCK_CATEGORIES);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchCategories = async () => {
+      setLoading(true);
+      setError(null);
+      getCategoryApi()
+        .then(setCategories)
+        .catch((err) => setError(err.message ?? "Failed to load categories"))
+        .finally(() => setLoading(false));
+    };
+  
+    useEffect(() => {
+      fetchCategories();
+    }, []);
 
   const filteredCategories = useMemo(() => {
     return categories.filter((category) => {
