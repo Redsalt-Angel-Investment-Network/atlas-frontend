@@ -141,6 +141,7 @@ export const messages = {
       noEntitiesWithFilters: "Try adjusting your filters or search terms",
       noEntitiesEmpty: "Create your first entity to get started",
       newEntity: "New Entity",
+      unknownCategory: "Unknown Category",
       filters: {
         allCategories: "All Categories",
         allStatuses: "All Statuses",
@@ -150,6 +151,8 @@ export const messages = {
         archived: "Archived",
       },
       noAttributes: "No attributes",
+      loading: "Loading entities...",
+      noWorkspace: "No workspace selected. Choose a workspace to view entities.",
       selectAll: "Select all entities",
       selectEntity: "Select entity",
       table: {
@@ -313,6 +316,7 @@ export const messages = {
       noEntitiesWithFilters: "Essayez d'ajuster vos filtres ou vos termes de recherche",
       noEntitiesEmpty: "Créez votre première entité pour commencer",
       newEntity: "Nouvelle entité",
+      unknownCategory: "Catégorie inconnue",
       filters: {
         allCategories: "Toutes les catégories",
         allStatuses: "Tous les statuts",
@@ -322,6 +326,8 @@ export const messages = {
         archived: "Archivé",
       },
       noAttributes: "Aucun attribut",
+      loading: "Chargement des entités...",
+      noWorkspace: "Aucun espace de travail sélectionné. Choisissez un espace de travail pour voir les entités.",
       selectAll: "Tout sélectionner",
       selectEntity: "Sélectionner l'entité",
       table: {

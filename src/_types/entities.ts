@@ -2,52 +2,44 @@ export interface EntityCategory {
   id: string;
   name: string;
 }
-
 export interface EntitySchema {
   id: string;
   name: string;
 }
-
 export interface EntityWorkspace {
   id: string;
   name: string;
 }
-
 export interface EntityAttribute {
   id?: string;
   field: string;
   value: string | number | boolean | null | Record<string, unknown>;
 }
-
 export interface Entity {
-  id: string;
-  workspace: EntityWorkspace | string;
-  category: EntityCategory | string;
-  schema: EntitySchema | string;
-  name: string;
-  reference: string;
-  attributes: EntityAttribute[] | Record<string, EntityAttributeValue>;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string | null;
-}
-
-// For list views
-export interface EntitySummary {
   id: string;
   workspace_id: string;
   category_id: string;
-  category_name: string;
-  schema_id: string;
-  schema_name: string;
+  category_schema_id: string;
   name: string;
   reference: string;
-  attributes_preview: Record<string, EntityAttributeValue>;
-  status: "active" | "archived";
+  attributes: EntityAttribute[];
   created_at: string;
   updated_at: string;
-  deleted_at: string | null;
+  deleted_at?: string;
 }
+
+// For list views
+export interface EntitySummary { 
+  id: string; 
+  workspace_id: string; 
+  category_id: string; 
+  category_schema_id: string; 
+  name: string; 
+  reference: string; 
+  attributes_preview: Record<string, EntityAttributeValue>;
+  status: "active" | "archived"; 
+  created_at: string;
+  updated_at: string; }
 
 export type EntityAttributeValue = string | number | boolean | null;
 
