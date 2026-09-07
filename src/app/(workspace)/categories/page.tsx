@@ -40,7 +40,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CategoryType, CreateCategoryPayload } from "@/_types/category";
-import { createCategoryApi, getCategoryApi } from "@/app/(workspace)/index";
+import { createCategoryApi, getCategoryApi } from "@/app/(workspace)/categories/index";
 import { CreateCategoryDrawer } from "./components/CreateCategoryForm";
 import { toast } from "sonner";
 

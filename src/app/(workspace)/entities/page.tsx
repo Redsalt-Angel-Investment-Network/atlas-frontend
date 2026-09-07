@@ -41,7 +41,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { type Entity } from "@/_types/entities";
-import { getCategoryApi, getEntitiesApi } from "@/app/(workspace)/index";
+import { getEntitiesApi } from "@/app/(workspace)/entities/index";
+import { getCategoryApi } from "@/app/(workspace)/categories/index";
 import { CategoryType } from "@/_types/category";
 
 const COLUMN_WIDTHS = {

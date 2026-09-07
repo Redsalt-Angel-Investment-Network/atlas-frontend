@@ -37,7 +37,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { WorkspaceMemberType } from "@/_types/workspaceMembers";
-import { getWorkspaceMembers } from "@/app/(workspace)/index";
+import { getWorkspaceMembers } from "@/app/(workspace)/team/index";
 import { useAuth } from "@/app/_contexts/AuthContext";
 import { EditRoleModal } from "./components/EditRoleModal";
 import { MemberType, Role } from "@/_types/members";
