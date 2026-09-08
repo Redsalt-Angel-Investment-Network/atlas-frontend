@@ -206,6 +206,20 @@ export const messages = {
           error: "Failed to create category. Please try again.",
         },
       },
+      modals: {
+        deleteCategory: {
+          title: "Delete Category",
+          subtitle:
+            "Are you sure you want to delete this category? This action cannot be undone.",
+          warning:
+            "Deleting this category will remove its schema configuration. Existing workspace items linked to this schema may lose their custom attribute data.",
+          cancel: "Cancel",
+          delete: "Delete Category",
+          deleting: "Deleting...",
+          deleteSuccess: "Category deleted successfully.",
+          deleteError: "Failed to delete category. Please try again.",
+        },
+      },
     },
     entities: {
       title: "Entities",
@@ -457,8 +471,22 @@ export const messages = {
           error: "Échec de la création de la catégorie. Veuillez réessayer.",
         },
       },
+      modals: {
+        deleteCategory: {
+          title: "Supprimer la catégorie",
+          subtitle:
+            "Êtes-vous sûr de vouloir supprimer cette catégorie ? Cette action est irréversible.",
+          warning:
+            "La suppression de cette catégorie entraînera le retrait de sa configuration de schéma. Les éléments associés risquent de perdre leurs attributs personnalisés.",
+          cancel: "Annuler",
+          delete: "Supprimer la catégorie",
+          deleting: "Suppression...",
+          deleteSuccess: "Catégorie supprimée avec succès.",
+          deleteError: "Échec de la suppression de la catégorie. Veuillez réessayer.",
+        },
+      },
     },
-     entities: {
+    entities: {
       title: "Entités",
       subtitle: "Gérez les entités dans votre espace de travail",
       searchPlaceholder: "Rechercher par nom, référence ou catégorie...",

@@ -29,3 +29,16 @@ export async function createCategoryApi(
   const data: CategoryType = await res.json();
   return data;
 }
+
+export async function deleteCategoryAPI(id: string): Promise<void> {
+  const endpoint = `/categories/${id}/`;
+
+  const res = await authFetch(endpoint, {
+    method: 'DELETE',
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData?.message || 'Failed to deactivate category');
+  }
+}

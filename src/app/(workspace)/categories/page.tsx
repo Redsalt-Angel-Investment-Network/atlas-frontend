@@ -40,10 +40,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CategoryType, CreateCategoryPayload } from "@/_types/category";
-import { createCategoryApi, getCategoryApi } from "@/app/(workspace)/categories/index";
+import { createCategoryApi, deleteCategoryAPI, getCategoryApi } from "@/app/(workspace)/categories/index";
 import { CreateCategoryDrawer } from "./components/CreateCategoryForm";
 import { toast } from "sonner";
-
+import { DeleteCategoryModal } from "./components/DeleteCategoryModal";
 
 
 
@@ -55,6 +55,8 @@ export default function SchemasListPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [openCreateCategoryDrawer, setopenCreateCategoryDrawer] = useState(false);
+  const [openDeleteCategoryModal, setOpenDeleteCategoryModal] = useState(false);
+  const [ selectedCategoryForDeletion, setSelectedCategoryForDeletion ] = useState<CategoryType | null>(null);
 
   const fetchCategories = async () => {
       setLoading(true);
@@ -84,6 +86,37 @@ export default function SchemasListPage() {
       toast.error(t("createCategoryForm.toast.error"));
 
       throw err;
+    }
+  };
+
+  const handleOpenDeleteCategoryModal = (category: CategoryType) => {
+    setSelectedCategoryForDeletion(category);
+    setOpenDeleteCategoryModal(true);
+  };
+
+  const closeDeleteCategoryModal = () => {
+    setSelectedCategoryForDeletion(null);
+    setOpenDeleteCategoryModal(false);
+  };
+
+  const handleDeleteCategoryAPI = async (id: string) => {
+    try {
+      await deleteCategoryAPI(id);
+      setCategories((prev) =>
+        prev.map((category) =>
+          category.id === id
+            ? {
+                ...category,
+                is_active: false,
+              }
+            : category,
+        ),
+      );
+      closeDeleteCategoryModal();
+      toast.success(t("modals.deleteCategory.deleteSuccess"));
+    } catch (error) {
+      toast.error(t("modals.deleteCategory.deleteError"));
+      throw error;
     }
   };
 
@@ -322,7 +355,13 @@ export default function SchemasListPage() {
                               <span>{t("actions.edit")}</span>
                             </Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="gap-2 cursor-pointer text-xs text-destructive focus:text-destructive">
+                          <DropdownMenuItem
+                            onSelect={(e) => {
+                              e.preventDefault();
+                              handleOpenDeleteCategoryModal(category);
+                            }}
+                            className="gap-2 cursor-pointer text-xs text-destructive focus:text-destructive"
+                          >
                             <Trash2 className="h-3.5 w-3.5" />
                             <span>{t("actions.delete")}</span>
                           </DropdownMenuItem>
@@ -342,6 +381,14 @@ export default function SchemasListPage() {
         isOpen={openCreateCategoryDrawer}
         onOpenChange={setopenCreateCategoryDrawer}
         onSubmitApi={handleCreateCategory}
+      />
+
+      {/* Delete Category Modal */}
+      <DeleteCategoryModal
+        open={openDeleteCategoryModal}
+        onOpenChange={setOpenDeleteCategoryModal}
+        category={selectedCategoryForDeletion}
+        onDelete={handleDeleteCategoryAPI}
       />
     </div>
   );
