@@ -40,17 +40,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { type Entity } from "@/_types/entities";
-import { deleteEntityAPI, getEntitiesApi } from "@/app/(workspace)/entities/index";
+import { type Entity, CreateEntityPayload  } from "@/_types/entities";
+import { deleteEntityAPI, getEntitiesApi,  createEntityApi  } from "@/app/(workspace)/entities/index";
 import { getCategoryApi } from "@/app/(workspace)/categories/index";
 import { CategoryType } from "@/_types/category";
 import { toast } from "sonner";
 import { DeleteEntityModal } from "./components/DeleteEntityModal";
+import { CreateEntityDrawer } from "./components/CreateEntityDrawer";
 
 const COLUMN_WIDTHS = {
   select: "w-[4%]",
   entity: "w-[18%]",
-  reference: "w-[13%]",
+  reference: "w-[9%]",
   category: "w-[13%]",
   status: "w-[11%]",
   created: "w-[12%]",
@@ -74,6 +75,7 @@ export default function EntitiesListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [openCreateEntityDrawer, setOpenCreateEntityDrawer] = useState(false);
 
   const [openDeleteEntityModal, setOpenDeleteEntityModal] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
@@ -85,6 +87,19 @@ export default function EntitiesListPage() {
 
   const fetchCategories = () => {
     return getCategoryApi();
+  };
+
+  const handleCreateEntity = async (
+    data: CreateEntityPayload,
+  ): Promise<void> => {
+    try {
+      const createdEntity = await createEntityApi(data);
+      setEntities((prev: Entity[]) => [createdEntity, ...prev]);
+      toast.success(t("createEntityForm.toast.success"));
+    } catch (error) {
+      toast.error(t("createEntityForm.toast.error"));
+      throw error;
+    }
   };
 
   useEffect(() => {
@@ -192,10 +207,16 @@ export default function EntitiesListPage() {
     if (!first) return null;
 
     const fieldLabel =
-      typeof first.field === "string"
-        ? first.field.replace(/_/g, " ")
+      first.field_name
+        ? first.field_name.replace(
+            /_/g,
+            " ",
+          )
         : "attribute";
-    return `${fieldLabel}: ${String(first.value)}`;
+
+    return `${fieldLabel}: ${String(
+      first.value,
+    )}`;
   };
 
   const getCategoryById = (categoryId: string,): CategoryType | undefined => {
@@ -245,11 +266,14 @@ export default function EntitiesListPage() {
           </h1>
           <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <Button asChild>
-          <Link href="/entities/new">
-            <Plus className="h-4 w-4" />
-            {t("newEntity")}
-          </Link>
+        <Button
+          type="button"
+          onClick={() =>
+            setOpenCreateEntityDrawer(true)
+          }
+        >
+          <Plus className="h-4 w-4" />
+          {t("newEntity")}
         </Button>
       </div>
 
@@ -495,6 +519,13 @@ export default function EntitiesListPage() {
             </TableBody>
           </Table>
         </div>
+
+        <CreateEntityDrawer
+          isOpen={openCreateEntityDrawer}
+          onOpenChange={setOpenCreateEntityDrawer}
+          categories={categories}
+          onSubmitApi={handleCreateEntity}
+        />
 
         {/* Delete Category Modal */}
         <DeleteEntityModal

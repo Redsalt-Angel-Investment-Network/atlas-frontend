@@ -6,14 +6,33 @@ export interface EntitySchema {
   id: string;
   name: string;
 }
+
+export interface EntitySchemaField {
+  id: string;
+  name: string;
+  type: string;
+  required: boolean;
+  position: number;
+}
+
+export interface EntityCategorySchema {
+  id: string;
+  category_id: string;
+  version: number;
+  fields: EntitySchemaField[];
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
 export interface EntityWorkspace {
   id: string;
   name: string;
 }
 export interface EntityAttribute {
   id?: string;
-  field: string;
-  value: string | number | boolean | null | Record<string, unknown>;
+  field_id: string;
+  field_name: string;
+  value: EntityAttributeValue;
 }
 export interface Entity {
   id: string;
@@ -21,6 +40,8 @@ export interface Entity {
   category_id: string;
   category_schema_id: string;
   name: string;
+  description?: string;
+  is_active: boolean;
   reference: string;
   attributes: EntityAttribute[];
   created_at: string;
@@ -28,7 +49,38 @@ export interface Entity {
   deleted_at?: string;
 }
 
-// For list views
+export interface CreateEntityAttributePayload {
+  field_id: string;
+  value: EntityAttributeValue;
+}
+
+export interface CreateEntityPayload {
+  category_id: string;
+  category_schema_id: string;
+  name: string;
+  attributes: CreateEntityAttributePayload[];
+}
+
+export interface EntityAttributeType {
+  id: string;
+  field_id: string;
+  field_name: string;
+  value: EntityAttributeValue;
+}
+
+export interface EntityRead {
+  id: string;
+  workspace_id: string;
+  category_id: string;
+  category_schema_id: string;
+  name: string;
+  description?: string;
+  is_active: boolean;
+  reference: string;
+  attributes: EntityAttributeType[];
+  created_at: string;
+  updated_at: string;
+}
 export interface EntitySummary { 
   id: string; 
   workspace_id: string; 
@@ -41,7 +93,7 @@ export interface EntitySummary {
   created_at: string;
   updated_at: string; }
 
-export type EntityAttributeValue = string | number | boolean | null;
+export type EntityAttributeValue = string | number | boolean | null |undefined | Record<string, unknown> ;
 
 // For detail view with full data
 export interface EntityDetail extends Entity {
@@ -73,4 +125,14 @@ export interface EntityListResponse {
   page: number;
   page_size: number;
   total_pages: number;
+}
+
+export interface UpdateEntityAttributePayload {
+  field_id: string;
+  value: EntityAttributeValue;
+}
+
+export interface UpdateEntityPayload {
+  name?: string;
+  attributes?: UpdateEntityAttributePayload[];
 }

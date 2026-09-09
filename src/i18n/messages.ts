@@ -333,6 +333,48 @@ export const messages = {
           deleteError: "Failed to delete entity. Please try again.",
         },
       },
+      "createEntityForm": {
+        "title": "Create Entity",
+        "description": "Create an entity using the fields defined by its category.",
+        "basicDetails": "Basic Details",
+        "fields": {
+          "name": {
+            "label": "Entity Name",
+            "placeholder": "Enter entity name"
+          },
+          "category": {
+            "label": "Category",
+            "placeholder": "Select a category"
+          },
+          "schemaVersion": "Schema Version",
+          "valuePlaceholder": "Enter {field}"
+        },
+        "attributes": {
+          "title": "Entity Attributes",
+          "description": "The fields below are generated automatically from the selected category.",
+          "noFields": "This category has no additional fields.",
+          "selectCategory": "Select a category to generate its fields."
+        },
+        "validation": {
+          "nameRequired": "Entity name is required.",
+          "nameMaxLength": "Entity name must be 255 characters or fewer.",
+          "categoryRequired": "Category is required.",
+          "fieldIdRequired": "A valid field ID is required.",
+          "fieldRequired": "This field is required.",
+          "schemaNotFound": "The category schema could not be found.",
+          "invalidNumber": "Please enter a valid number.",
+          "invalidJson": "Please enter valid JSON."
+        },
+        "buttons": {
+          "cancel": "Cancel",
+          "create": "Create Entity",
+          "creating": "Creating..."
+        },
+        "toast": {
+          "success": "Entity created successfully.",
+          "error": "Failed to create entity. Please try again."
+        }
+      },
     },
   },
   fr: {
@@ -679,6 +721,48 @@ export const messages = {
           deleteSuccess: "Entité supprimée avec succès.",
           deleteError: "Échec de la suppression de l'entité. Veuillez réessayer.",
         },
+      },
+      "createEntityForm": {
+        "title": "Créer une entité",
+        "description": "Créez une entité à l'aide des champs définis par sa catégorie.",
+        "basicDetails": "Informations de base",
+        "fields": {
+          "name": {
+            "label": "Nom de l'entité",
+            "placeholder": "Saisissez le nom de l'entité"
+          },
+          "category": {
+            "label": "Catégorie",
+            "placeholder": "Sélectionnez une catégorie"
+          },
+          "schemaVersion": "Version du schéma",
+          "valuePlaceholder": "Saisissez {field}"
+        },
+        "attributes": {
+          "title": "Attributs de l'entité",
+          "description": "Les champs ci-dessous sont générés automatiquement à partir de la catégorie sélectionnée.",
+          "noFields": "Cette catégorie ne contient aucun champ supplémentaire.",
+          "selectCategory": "Sélectionnez une catégorie pour générer ses champs."
+        },
+        "validation": {
+          "nameRequired": "Le nom de l'entité est obligatoire.",
+          "nameMaxLength": "Le nom de l'entité doit comporter au maximum 255 caractères.",
+          "categoryRequired": "La catégorie est obligatoire.",
+          "fieldIdRequired": "Un identifiant de champ valide est requis.",
+          "fieldRequired": "Ce champ est obligatoire.",
+          "schemaNotFound": "Le schéma de la catégorie est introuvable.",
+          "invalidNumber": "Veuillez saisir un nombre valide.",
+          "invalidJson": "Veuillez saisir un JSON valide."
+        },
+        "buttons": {
+          "cancel": "Annuler",
+          "create": "Créer l'entité",
+          "creating": "Création..."
+        },
+        "toast": {
+          "success": "Entité créée avec succès.",
+          "error": "Échec de la création de l'entité. Veuillez réessayer."
+        }
       },
     },
   },
