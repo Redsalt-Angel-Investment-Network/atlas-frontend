@@ -41,9 +41,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { type Entity } from "@/_types/entities";
-import { getEntitiesApi } from "@/app/(workspace)/entities/index";
+import { deleteEntityAPI, getEntitiesApi } from "@/app/(workspace)/entities/index";
 import { getCategoryApi } from "@/app/(workspace)/categories/index";
 import { CategoryType } from "@/_types/category";
+import { toast } from "sonner";
+import { DeleteEntityModal } from "./components/DeleteEntityModal";
 
 const COLUMN_WIDTHS = {
   select: "w-[4%]",
@@ -72,7 +74,10 @@ export default function EntitiesListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  
+
+  const [openDeleteEntityModal, setOpenDeleteEntityModal] = useState(false);
+  const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
+
 
   const fetchEntities = (categoryId?: string) => {
     return getEntitiesApi(categoryId);
@@ -197,6 +202,39 @@ export default function EntitiesListPage() {
     return categories.find((category) => category.id === categoryId);
   };
 
+  const handleOpenDeleteEntityModal = (entity: Entity) => {
+    setSelectedEntity(entity);
+    setOpenDeleteEntityModal(true);
+  };
+
+  const closeDeleteEntityModal = () => {
+    setSelectedEntity(null);
+    setOpenDeleteEntityModal(false);
+  };
+
+  const handleDeleteEntity = async (id: string) => {
+    try {
+      await deleteEntityAPI(id);
+
+      setEntities((prev) =>
+        prev.map((entity) =>
+          entity.id === id
+            ? {
+              ...entity,
+              deleted_at: new Date().toISOString(),
+            }
+            : entity,
+        ),
+      );
+
+      closeDeleteEntityModal();
+      toast.success(t("modals.deleteEntity.deleteSuccess"));
+    } catch (error) {
+      toast.error(t("modals.deleteEntity.deleteError"));
+      throw error;
+    }
+  };
+
   return (
     <div className="p-6 pt-0 max-w-10xl mx-auto space-y-6">
       {/* Header Section */}
@@ -284,8 +322,8 @@ export default function EntitiesListPage() {
                       allVisibleSelected
                         ? true
                         : someVisibleSelected
-                        ? "indeterminate"
-                        : false
+                          ? "indeterminate"
+                          : false
                     }
                     onCheckedChange={toggleSelectAll}
                     aria-label={t("selectAll")}
@@ -294,9 +332,8 @@ export default function EntitiesListPage() {
                 {tableHeaders.map((tableHeader) => (
                   <TableHead
                     key={tableHeader.key}
-                    className={`h-10 ${COLUMN_WIDTHS[tableHeader.key]} text-xs font-semibold tracking-wider text-muted-foreground/80 uppercase ${
-                      tableHeader.key === "actions" ? "text-center" : ""
-                    }`}
+                    className={`h-10 ${COLUMN_WIDTHS[tableHeader.key]} text-xs font-semibold tracking-wider text-muted-foreground/80 uppercase ${tableHeader.key === "actions" ? "text-center" : ""
+                      }`}
                   >
                     {tableHeader.label}
                   </TableHead>
@@ -382,11 +419,10 @@ export default function EntitiesListPage() {
                       <TableCell className={`py-3 ${COLUMN_WIDTHS.status} text-cendter `}>
                         <Badge
                           variant="outline"
-                          className={`capitalize text-xs font-medium whitespace-nowrap ${
-                            entity.deleted_at
-                              ? "border-slate-200 bg-slate-50 text-slate-600 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-400"
-                              : "border-emerald-500/30 text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 dark:text-emerald-400"
-                          }`}
+                          className={`capitalize text-xs font-medium whitespace-nowrap ${entity.deleted_at
+                            ? "border-slate-200 bg-slate-50 text-slate-600 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-400"
+                            : "border-emerald-500/30 text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 dark:text-emerald-400"
+                            }`}
                         >
                           {entity.deleted_at ? t("statuses.archived") : t("statuses.active")}
                         </Badge>
@@ -439,7 +475,13 @@ export default function EntitiesListPage() {
                               <span>{t("actions.duplicate")}</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="gap-2 cursor-pointer text-xs text-destructive focus:text-destructive">
+                            <DropdownMenuItem
+                              className="gap-2 cursor-pointer text-xs text-destructive focus:text-destructive"
+                              onSelect={(e) => {
+                                e.preventDefault();
+                                handleOpenDeleteEntityModal(entity);
+                              }}
+                            >
                               <Trash2 className="h-3.5 w-3.5" />
                               <span>{t("actions.archive")}</span>
                             </DropdownMenuItem>
@@ -453,6 +495,14 @@ export default function EntitiesListPage() {
             </TableBody>
           </Table>
         </div>
+
+        {/* Delete Category Modal */}
+        <DeleteEntityModal
+          open={openDeleteEntityModal}
+          onOpenChange={setOpenDeleteEntityModal}
+          entity={selectedEntity}
+          onDelete={handleDeleteEntity}
+        />
       </div>
     </div>
   );

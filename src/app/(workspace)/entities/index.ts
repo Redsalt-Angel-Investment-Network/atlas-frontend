@@ -19,3 +19,16 @@ export async function getEntitiesApi(
   const data: Entity[] = await res.json();
   return data;
 }
+
+export async function deleteEntityAPI(id: string): Promise<void> {
+  const endpoint = `/entities/${id}/`;
+
+  const res = await authFetch(endpoint, {
+    method: 'DELETE',
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData?.message || 'Failed to deactivate entity');
+  }
+}

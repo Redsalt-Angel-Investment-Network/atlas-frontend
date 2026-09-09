@@ -199,7 +199,7 @@ export const messages = {
           typeRequired: "Field type is required",
           regexPattern: "Use letters, numbers, and underscores only",
           fieldNameRequired: "Field name is required",
-          
+
         },
         toast: {
           success: "Category created successfully.",
@@ -260,6 +260,20 @@ export const messages = {
         edit: "Edit",
         duplicate: "Duplicate",
         archive: "Archive",
+      },
+      modals: {
+        deleteEntity: {
+          title: "Delete Entity",
+          subtitle:
+            "Are you sure you want to delete this entity? This action cannot be undone.",
+          warning:
+            "Deleting this entity will remove it from the workspace. Any custom attribute data associated with this entity will also be deleted.",
+          cancel: "Cancel",
+          delete: "Delete Entity",
+          deleting: "Deleting...",
+          deleteSuccess: "Entity deleted successfully.",
+          deleteError: "Failed to delete entity. Please try again.",
+        },
       },
     },
   },
@@ -525,6 +539,20 @@ export const messages = {
         edit: "Modifier",
         duplicate: "Dupliquer",
         archive: "Archiver",
+      },
+      modals: {
+        deleteEntity: {
+          title: "Supprimer l'entité",
+          subtitle:
+            "Êtes-vous sûr de vouloir supprimer cette entité ? Cette action est irréversible.",
+          warning:
+            "La suppression de cette entité la retirera de l’espace de travail. Les attributs personnalisés associés à cette entité seront également supprimés.",
+          cancel: "Annuler",
+          delete: "Supprimer l'entité",
+          deleting: "Suppression...",
+          deleteSuccess: "Entité supprimée avec succès.",
+          deleteError: "Échec de la suppression de l'entité. Veuillez réessayer.",
+        },
       },
     },
   },
