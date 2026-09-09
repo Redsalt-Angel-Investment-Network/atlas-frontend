@@ -39,13 +39,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CategoryType, CreateCategoryPayload } from "@/_types/category";
-import { createCategoryApi, deleteCategoryAPI, getCategoryApi } from "@/app/(workspace)/categories/index";
+import { CategoryType, CreateCategoryPayload, UpdateCategoryPayload } from "@/_types/category";
+import { createCategoryApi, deleteCategoryAPI, getCategoryApi, updateCategoryApi } from "@/app/(workspace)/categories/index";
 import { CreateCategoryDrawer } from "./components/CreateCategoryForm";
 import { toast } from "sonner";
 import { DeleteCategoryModal } from "./components/DeleteCategoryModal";
-
-
+import { EditCategoryDrawer } from "./components/EditCategoryDrawer";
 
 export default function SchemasListPage() {
   const t = useTranslations("categories");
@@ -57,6 +56,8 @@ export default function SchemasListPage() {
   const [openCreateCategoryDrawer, setopenCreateCategoryDrawer] = useState(false);
   const [openDeleteCategoryModal, setOpenDeleteCategoryModal] = useState(false);
   const [ selectedCategoryForDeletion, setSelectedCategoryForDeletion ] = useState<CategoryType | null>(null);
+  const [openEditCategoryDrawer, setOpenEditCategoryDrawer] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>( null );
 
   const fetchCategories = async () => {
       setLoading(true);
@@ -117,6 +118,30 @@ export default function SchemasListPage() {
     } catch (error) {
       toast.error(t("modals.deleteCategory.deleteError"));
       throw error;
+    }
+  };
+
+  const handleUpdateCategory = async (
+    updates: UpdateCategoryPayload,
+  ): Promise<void> => {
+    if (!selectedCategory) {
+      return;
+    }
+    try {
+      const updatedCategory = await updateCategoryApi(
+        selectedCategory.id,
+        updates,
+      );
+
+      setCategories((prev) =>
+        prev.map((category) =>
+          category.id === updatedCategory.id ? updatedCategory : category,
+        ),
+      );
+      setOpenEditCategoryDrawer(false);
+      toast.success(t("editCategoryForm.toast.success"));
+    } catch (err) {
+      toast.error(t("editCategoryForm.toast.error"));
     }
   };
 
@@ -347,13 +372,14 @@ export default function SchemasListPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-40">
                           <DropdownMenuItem
-                            asChild
+                            onClick={() => {
+                              setSelectedCategory(category);
+                              setOpenEditCategoryDrawer(true);
+                            }}
                             className="gap-2 cursor-pointer text-xs"
                           >
-                            <Link href={`/categories/${category.id}`}>
-                              <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
-                              <span>{t("actions.edit")}</span>
-                            </Link>
+                            <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
+                            <span>{t("actions.edit")}</span>
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onSelect={(e) => {
@@ -389,6 +415,14 @@ export default function SchemasListPage() {
         onOpenChange={setOpenDeleteCategoryModal}
         category={selectedCategoryForDeletion}
         onDelete={handleDeleteCategoryAPI}
+      />
+
+      {/* Edit Category Drawer */}
+      <EditCategoryDrawer
+        isOpen={openEditCategoryDrawer}
+        onOpenChange={() => setOpenEditCategoryDrawer(false)}
+        initialData={selectedCategory}
+        onSubmitApi={handleUpdateCategory}
       />
     </div>
   );

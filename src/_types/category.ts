@@ -29,3 +29,10 @@ export type CreateCategoryPayload = {
   is_active: boolean;
   schema: CategorySchemaFieldsType[];
 };
+
+export type UpdateCategoryPayload = {
+  name: string;
+  description?: string;
+  is_active: boolean;
+  schema: CategorySchemaFieldsType[];
+};

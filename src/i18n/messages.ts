@@ -1,5 +1,5 @@
 export const locales = ["en", "fr"] as const;
-export type Locale = (typeof locales)[number];
+export type Locale = typeof locales[number];
 
 export const messages = {
   en: {
@@ -26,7 +26,7 @@ export const messages = {
       security: "Security",
       logOut: "Log out",
       loggedOutSuccessfully: "Logged out successfully",
-      logoutFailed: "Unable to log out. Please try again."
+      logoutFailed: "Unable to log out. Please try again.",
     },
     sidebar: {
       switchWorkspace: "Switch Workspace",
@@ -45,7 +45,7 @@ export const messages = {
       teamAndPermissions: "Team & Permissions",
       settings: "Settings",
       invitePeople: "Invite people",
-      helpAndGuides: "Help & guides"
+      helpAndGuides: "Help & guides",
     },
     Login: {
       title: "Sign in",
@@ -115,7 +115,7 @@ export const messages = {
         fields: "Fields",
         status: "Status",
         lastUpdated: "Last Updated",
-        actions: "Actions"
+        actions: "Actions",
       },
       status: {
         allStatuses: "All Statuses",
@@ -199,7 +199,6 @@ export const messages = {
           typeRequired: "Field type is required",
           regexPattern: "Use letters, numbers, and underscores only",
           fieldNameRequired: "Field name is required",
-
         },
         toast: {
           success: "Category created successfully.",
@@ -218,6 +217,64 @@ export const messages = {
           deleting: "Deleting...",
           deleteSuccess: "Category deleted successfully.",
           deleteError: "Failed to delete category. Please try again.",
+        },
+      },
+      editCategoryForm: {
+        title: "Edit Category",
+        description:
+          "Update category details and configure custom attribute fields.",
+        basicDetails: "Basic Details",
+        fields: {
+          name: {
+            label: "Category Name",
+            placeholder: "e.g. Electronics, Laptops",
+          },
+          description: {
+            label: "Description",
+            placeholder: "Brief description of this category...",
+          },
+          isActive: {
+            label: "Active Status",
+            description: "Enable visibility across workspace workflows",
+          },
+        },
+        schemaFields: {
+          title: "Schema Fields",
+          subtitle: "Define properties required for items in this category.",
+          addField: "Add Field",
+          emptyState:
+            'No custom fields added yet. Click "Add Field" to configure schema attributes.',
+          keyPlaceholder: "field_key (e.g. serial_number)",
+          keyRequired: "Field key is required",
+          keyPattern: "Letters, numbers, and underscores only",
+          typeSelectPlaceholder: "Type",
+          typeRequired: "Type is required",
+          requiredShort: "Req",
+          types: {
+            text: "Text",
+            number: "Number",
+            boolean: "Boolean",
+            date: "Date",
+            json: "JSON",
+            select: "Select",
+          },
+        },
+        buttons: {
+          cancel: "Cancel",
+          submit: "Save Changes",
+          submitting: "Saving...",
+        },
+        toast: {
+          error: "Failed to update category. Please try again.",
+          success: "Category updated successfully.",
+        },
+        zodValidation: {
+          nameRequired: "Category name is required",
+          nameMaxLength: "Category name must be less than 100 characters",
+          descriptionMaxLength: "Description must be less than 500 characters",
+          typeRequired: "Field type is required",
+          regexPattern: "Use letters, numbers, and underscores only",
+          fieldNameRequired: "Field name is required",
         },
       },
     },
@@ -240,7 +297,8 @@ export const messages = {
       },
       noAttributes: "No attributes",
       loading: "Loading entities...",
-      noWorkspace: "No workspace selected. Choose a workspace to view entities.",
+      noWorkspace:
+        "No workspace selected. Choose a workspace to view entities.",
       selectAll: "Select all entities",
       selectEntity: "Select entity",
       table: {
@@ -301,7 +359,7 @@ export const messages = {
       security: "Sécurité",
       logOut: "Se déconnecter",
       loggedOutSuccessfully: "Déconnexion réussie",
-      logoutFailed: "Impossible de se déconnecter. Veuillez réessayer."
+      logoutFailed: "Impossible de se déconnecter. Veuillez réessayer.",
     },
     sidebar: {
       switchWorkspace: "Changer d’espace de travail",
@@ -320,7 +378,7 @@ export const messages = {
       settings: "Paramètres",
       invitePeople: "Inviter des personnes",
       helpAndGuides: "Aide et guides",
-      failedToLoadWorkspaces: "Échec du chargement des espaces de travail"
+      failedToLoadWorkspaces: "Échec du chargement des espaces de travail",
     },
     Login: {
       title: "Connexion",
@@ -474,10 +532,13 @@ export const messages = {
         },
         zodValidation: {
           nameRequired: "Le nom de la catégorie est requis",
-          nameMaxLength: "Le nom de la catégorie doit contenir moins de 100 caractères",
-          descriptionMaxLength: "La description doit contenir moins de 500 caractères",
+          nameMaxLength:
+            "Le nom de la catégorie doit contenir moins de 100 caractères",
+          descriptionMaxLength:
+            "La description doit contenir moins de 500 caractères",
           typeRequired: "Le type de champ est requis",
-          regexPattern: "Utilisez uniquement des lettres, des chiffres et des underscores",
+          regexPattern:
+            "Utilisez uniquement des lettres, des chiffres et des underscores",
           fieldNameRequired: "Le nom du champ est requis",
         },
         toast: {
@@ -496,7 +557,70 @@ export const messages = {
           delete: "Supprimer la catégorie",
           deleting: "Suppression...",
           deleteSuccess: "Catégorie supprimée avec succès.",
-          deleteError: "Échec de la suppression de la catégorie. Veuillez réessayer.",
+          deleteError:
+            "Échec de la suppression de la catégorie. Veuillez réessayer.",
+        },
+      },
+      editCategoryForm: {
+        title: "Modifier la catégorie",
+        description:
+          "Mettez à jour les détails de la catégorie et configurez les champs d'attributs personnalisés.",
+        basicDetails: "Informations de base",
+        fields: {
+          name: {
+            label: "Nom de la catégorie",
+            placeholder: "ex. Électronique, Ordinateurs portables",
+          },
+          description: {
+            label: "Description",
+            placeholder: "Brève description de cette catégorie...",
+          },
+          isActive: {
+            label: "Statut actif",
+            description: "Commencez par créer votre première catégorie.",
+          },
+        },
+        schemaFields: {
+          title: "Champs du schéma",
+          subtitle:
+            "Définir les propriétés requises pour les éléments de cette catégorie.",
+          addField: "Ajouter un champ",
+          emptyState:
+            'Aucun champ personnalisé ajouté. Cliquez sur "Ajouter un champ" pour configurer les attributs du schéma.',
+          keyPlaceholder: "clé_champ (ex. numero_serie)",
+          keyRequired: "La clé du champ est requise",
+          keyPattern: "Lettres, chiffres et underscores uniquement",
+          typeSelectPlaceholder: "Type",
+          typeRequired: "Le type est requis",
+          requiredShort: "Obl",
+          types: {
+            text: "Texte",
+            number: "Nombre",
+            boolean: "Booléen",
+            date: "Date",
+            json: "JSON",
+            select: "Sélection",
+          },
+        },
+        buttons: {
+          cancel: "Annuler",
+          submit: "Enregistrer les modifications",
+          submitting: "Enregistrement...",
+        },
+        toast: {
+          error: "Échec de la mise à jour de la catégorie. Veuillez réessayer.",
+          success: "Catégorie mise à jour avec succès.",
+        },
+        zodValidation: {
+          nameRequired: "Le nom de la catégorie est requis",
+          nameMaxLength:
+            "Le nom de la catégorie doit contenir moins de 100 caractères",
+          descriptionMaxLength:
+            "La description doit contenir moins de 500 caractères",
+          typeRequired: "Le type de champ est requis",
+          regexPattern:
+            "Utilisez uniquement des lettres, des chiffres et des underscores",
+          fieldNameRequired: "Le nom du champ est requis",
         },
       },
     },
@@ -505,7 +629,8 @@ export const messages = {
       subtitle: "Gérez les entités dans votre espace de travail",
       searchPlaceholder: "Rechercher par nom, référence ou catégorie...",
       noEntities: "Aucune entité trouvée",
-      noEntitiesWithFilters: "Essayez d'ajuster vos filtres ou vos termes de recherche",
+      noEntitiesWithFilters:
+        "Essayez d'ajuster vos filtres ou vos termes de recherche",
       noEntitiesEmpty: "Créez votre première entité pour commencer",
       newEntity: "Nouvelle entité",
       unknownCategory: "Catégorie inconnue",
@@ -519,7 +644,8 @@ export const messages = {
       },
       noAttributes: "Aucun attribut",
       loading: "Chargement des entités...",
-      noWorkspace: "Aucun espace de travail sélectionné. Choisissez un espace de travail pour voir les entités.",
+      noWorkspace:
+        "Aucun espace de travail sélectionné. Choisissez un espace de travail pour voir les entités.",
       selectAll: "Tout sélectionner",
       selectEntity: "Sélectionner l'entité",
       table: {

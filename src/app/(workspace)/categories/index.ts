@@ -1,4 +1,8 @@
-import { CategoryType, CreateCategoryPayload } from "@/_types/category";
+import {
+  CategoryType,
+  CreateCategoryPayload,
+  UpdateCategoryPayload,
+} from "@/_types/category";
 import { authFetch } from "@/utils/apiClient";
 
 export async function getCategoryApi(): Promise<CategoryType[]> {
@@ -34,11 +38,32 @@ export async function deleteCategoryAPI(id: string): Promise<void> {
   const endpoint = `/categories/${id}/`;
 
   const res = await authFetch(endpoint, {
-    method: 'DELETE',
+    method: "DELETE",
   });
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData?.message || 'Failed to deactivate category');
+    throw new Error(errorData?.message || "Failed to deactivate category");
   }
+}
+
+export async function updateCategoryApi(
+  categoryId: string,
+  updates: UpdateCategoryPayload,
+): Promise<CategoryType> {
+  const endpoint = `/categories/${categoryId}/`;
+
+  const res = await authFetch(endpoint, {
+    method: "PATCH",
+    body: JSON.stringify(updates),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.text();
+    throw new Error(errorData || "Failed to update category");
+  }
+
+  const data: CategoryType = await res.json();
+
+  return data;
 }
