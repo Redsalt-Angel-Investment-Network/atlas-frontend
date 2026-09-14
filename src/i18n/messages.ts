@@ -376,6 +376,151 @@ export const messages = {
         }
       },
     },
+    workflows: {
+      title: "Workflows",
+      description: "Design, automate, and monitor your workspace workflows.",
+      createWorkflow: "Create Workflow",
+      searchPlaceholder: "Search workflows by name or slug...",
+      status: {
+        all: "All Statuses",
+        active: "Active",
+        draft: "Draft",
+        inactive: "Inactive",
+        archived: "Archived",
+      },
+      trigger: {
+        all: "All Triggers",
+        webhook: "Webhook",
+        schedule: "Schedule",
+        event: "Event",
+        manual: "Manual",
+      },
+      kpi: {
+        totalWorkflows: "Total Workflows",
+        activePipelines: "Active Pipelines",
+        ofTotal: "of {total} total",
+        totalExecutions: "Total Executions",
+        recentIssues: "Recent Issues",
+        workflowsFailed: "workflows failed",
+      },
+      table: {
+        workflow: "Workflow",
+        trigger: "Trigger",
+        steps: "Versions",
+        status: "Status",
+        lastRun: "Last Run",
+        actions: "Actions",
+        stepsCount: "version {count}",
+        neverRun: "Never run",
+        never: "Never",
+        justNow: "Just now",
+        minutesAgo: "{count}m ago",
+        hoursAgo: "{count}h ago",
+      },
+      emptyState: {
+        title: "No workflows found",
+        searchNoResults: "Try adjusting your filters or search terms.",
+        noData: "Get started by creating your first workflow.",
+      },
+      actions: {
+        runNow: "Run Now",
+        runWorkflow: "Run Workflow",
+        edit: "Edit",
+        delete: "Delete",
+      },
+      executionStatus: {
+        success: "Success",
+        failed: "Failed",
+        running: "Running",
+        idle: "Idle",
+      },
+      toast: {
+        loadError: "Failed to load workflows",
+        triggerToast: {
+          loading: 'Triggering execution for "{name}"...',
+          success: 'Workflow "{name}" triggered!',
+          error: "Failed to trigger workflow execution",
+        },
+      },
+      triggerOptions: {
+        webhook: {
+          title: "Webhook Event",
+          description: "Trigger via HTTP POST request from an external system.",
+        },
+        schedule: {
+          title: "Scheduled Cron",
+          description: "Run automatically on a recurring schedule or timer.",
+        },
+        event: {
+          title: "System Event",
+          description: "React to internal application events or message queues.",
+        },
+        manual: {
+          title: "Manual Trigger",
+          description: "Execute manually via dashboard button or REST API.",
+        },
+      },
+      createDrawer: {
+        title: "Create New Workflow",
+        description:
+          "Set up an automated sequence triggered by webhooks, schedules, or events.",
+        form: {
+          name: {
+            label: "Workflow Name",
+            placeholder: "e.g. Customer Onboarding Sequence",
+          },
+          description: {
+            label: "Description",
+            placeholder:
+              "Describe what this workflow does, what triggers it, and key steps...",
+          },
+          trigger: {
+            label: "Select Trigger Type",
+            hint: "Choose how this workflow execution should be initiated.",
+            selected: "Selected",
+          },
+          triggerConfig: {
+            title: "Trigger Initial Configuration",
+            webhook: {
+              endpointLabel: "Endpoint URL (Generated after save)",
+              endpointFallback: "identifier",
+            },
+            schedule: {
+              cronLabel: "Cron Expression (UTC)",
+              cronHint: "Runs every day at midnight (UTC).",
+            },
+            event: {
+              eventLabel: "Event Topic / Key Name",
+            },
+            manual: {
+              hint: "No initial setup required. You can trigger this workflow anytime using the UI play button or REST endpoint.",
+            },
+          },
+        },
+        buttons: {
+          cancel: "Cancel",
+          create: "Create Workflow",
+          creating: "Creating...",
+        },
+        validation: {
+          nameRequired: "Workflow name is required",
+          nameMaxLength: "Name must be 80 characters or fewer",
+          descriptionMaxLength: "Description must be 250 characters or fewer",
+          triggerTypeRequired: "Please select a trigger type",
+          cronRequired: "Cron expression is required for scheduled workflows",
+          cronInvalid: "Invalid cron expression. Use 5 fields, e.g. 0 0 * * *",
+          eventKeyRequired: "Event key is required for event-triggered workflows",
+          eventKeyPattern:
+            "Use dot notation, e.g. order.created or user.signed_up",
+          formHasErrors: "Please fix the errors below before submitting.",
+          submitFailed: "Failed to create workflow. Please try again.",
+        },
+        toast: {
+          error: "Failed to create workflow",
+          success: "Workflow created successfully"
+        },
+      },
+    },
   },
   fr: {
     LocaleSwitcher: {
@@ -762,6 +907,164 @@ export const messages = {
         "toast": {
           "success": "Entité créée avec succès.",
           "error": "Échec de la création de l'entité. Veuillez réessayer."
+        }
+      },
+    },
+    workflows: {
+      title: "Flux de travail",
+      description:
+        "Concevez, automatisez et surveillez les flux de travail de votre espace de travail.",
+      createWorkflow: "Créer un flux de travail",
+      searchPlaceholder: "Rechercher des flux de travail par nom ou slug...",
+      status: {
+        all: "Tous les statuts",
+        active: "Actif",
+        draft: "Brouillon",
+        inactive: "Inactif",
+        archived: "Archivé",
+      },
+      trigger: {
+        all: "Tous les déclencheurs",
+        webhook: "Webhook",
+        schedule: "Planification",
+        event: "Événement",
+        manual: "Manuel",
+      },
+      kpi: {
+        totalWorkflows: "Flux de travail totaux",
+        activePipelines: "Pipelines actifs",
+        ofTotal: "sur {total} au total",
+        totalExecutions: "Exécutions totales",
+        recentIssues: "Problèmes récents",
+        workflowsFailed: "flux de travail en échec",
+      },
+      table: {
+        workflow: "Flux de travail",
+        trigger: "Déclencheur",
+        steps: "Versions",
+        status: "Statut",
+        lastRun: "Dernière exécution",
+        actions: "Actions",
+        stepsCount: "version {count}",
+        neverRun: "Jamais exécuté",
+        never: "Jamais",
+        justNow: "À l'instant",
+        minutesAgo: "il y a {count} min",
+        hoursAgo: "il y a {count} h",
+      },
+      emptyState: {
+        title: "Aucun flux de travail trouvé",
+        searchNoResults:
+          "Essayez d'ajuster vos filtres ou vos termes de recherche.",
+        noData: "Commencez par créer votre premier flux de travail.",
+      },
+      actions: {
+        runNow: "Exécuter maintenant",
+        runWorkflow: "Exécuter le flux de travail",
+        edit: "Modifier",
+        delete: "Supprimer",
+      },
+      executionStatus: {
+        success: "Réussi",
+        failed: "Échoué",
+        running: "En cours",
+        idle: "Inactif",
+      },
+      toast: {
+        loadError: "Échec du chargement des flux de travail",
+        triggerToast: {
+          loading: "Déclenchement de l'exécution pour « {name} »...",
+          success: "Flux de travail « {name} » déclenché !",
+          error: "Échec du déclenchement de l'exécution du flux de travail",
+        },
+      },
+      triggerOptions: {
+        webhook: {
+          title: "Événement Webhook",
+          description:
+            "Déclencher via une requête HTTP POST depuis un système externe.",
+        },
+        schedule: {
+          title: "Cron planifié",
+          description:
+            "S'exécuter automatiquement selon une planification récurrente ou un minuteur.",
+        },
+        event: {
+          title: "Événement système",
+          description:
+            "Réagir aux événements internes de l'application ou aux files de messages.",
+        },
+        manual: {
+          title: "Déclencheur manuel",
+          description:
+            "Exécuter manuellement via le bouton du tableau de bord ou l'API REST.",
+        },
+      },
+      createDrawer: {
+        title: "Créer un nouveau flux de travail",
+        description:
+          "Configurez une séquence automatisée déclenchée par des webhooks, des planifications ou des événements.",
+
+        form: {
+          name: {
+            label: "Nom du flux de travail",
+            placeholder: "ex. Séquence d'intégration client",
+          },
+          description: {
+            label: "Description",
+            placeholder:
+              "Décrivez ce que fait ce flux de travail, ce qui le déclenche et les étapes clés...",
+          },
+          trigger: {
+            label: "Sélectionner le type de déclencheur",
+            hint: "Choisissez comment l'exécution de ce flux de travail doit être initiée.",
+            selected: "Sélectionné",
+          },
+          triggerConfig: {
+            title: "Configuration initiale du déclencheur",
+            webhook: {
+              endpointLabel:
+                "URL du point de terminaison (générée après l'enregistrement)",
+              endpointFallback: "identifiant",
+            },
+            schedule: {
+              cronLabel: "Expression Cron (UTC)",
+              cronHint: "S'exécute chaque jour à minuit (UTC).",
+            },
+            event: {
+              eventLabel: "Sujet / Nom de clé d'événement",
+            },
+            manual: {
+              hint: "Aucune configuration initiale requise. Vous pouvez déclencher ce flux de travail à tout moment via le bouton de lecture de l'interface ou un point de terminaison REST.",
+            },
+          },
+        },
+        buttons: {
+          cancel: "Annuler",
+          create: "Créer le flux de travail",
+          creating: "Création en cours...",
+        },
+        validation: {
+          nameRequired: "Le nom du flux de travail est requis",
+          nameMaxLength: "Le nom doit contenir 80 caractères ou moins",
+          descriptionMaxLength:
+            "La description doit contenir 250 caractères ou moins",
+          triggerTypeRequired: "Veuillez sélectionner un type de déclencheur",
+          cronRequired: "L'expression Cron est requise pour les flux planifiés",
+          cronInvalid:
+            "Expression Cron invalide. Utilisez 5 champs, ex. 0 0 * * *",
+          eventKeyRequired:
+            "La clé d'événement est requise pour les flux déclenchés par événement",
+          eventKeyPattern:
+            "Utilisez la notation par points, ex. order.created ou user.signed_up",
+          formHasErrors:
+            "Veuillez corriger les erreurs ci-dessous avant de soumettre.",
+          submitFailed:
+            "Échec de la création du flux de travail. Veuillez réessayer.",
+        },
+        toast: {
+          error: "Échec de la création du flux de travail",
+          success: "Flux de travail créé avec succès"
         }
       },
     },
