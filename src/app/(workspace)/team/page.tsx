@@ -87,21 +87,40 @@ export default function MembersPage() {
     console.log(`Updated member ${memberId} role to ${newRole}`);
   };
 
-  const fetchMembers = async () => {
-    if (!workspaceId) return;
-    setLoading(true);
-    setError(null);
-    getWorkspaceMembers(workspaceId)
-      .then(setMembers)
-      .catch((err) => setError(err.message ?? "Failed to load members"))
-      .finally(() => setLoading(false));
-  };
-
   useEffect(() => {
-    fetchMembers();
+    if (!workspaceId) { return; }
+    let cancelled = false;
+
+    const loadMembers = async () => {
+      try {
+        const members = await getWorkspaceMembers(workspaceId);
+
+        if (!cancelled) {
+          setMembers(members);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            err instanceof Error
+              ? err.message
+              : "Failed to load members"
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadMembers();
+
+    return () => {
+      cancelled = true;
+    };
   }, [workspaceId]);
 
-  const handleOpenDeactivateModal = (member: WorkspaceMemberType ) => {
+  const handleOpenDeactivateModal = (member: WorkspaceMemberType) => {
     setSelectedMember(member);
     setDeactivateModalOpen(true);
   };
@@ -115,7 +134,7 @@ export default function MembersPage() {
     const search = searchTerm.toLowerCase().trim();
 
     const matchesSearch =
-      !search || 
+      !search ||
       member.name.toLowerCase().includes(search) ||
       member.email.toLowerCase().includes(search);
 
@@ -281,11 +300,10 @@ export default function MembersPage() {
                     <TableCell className="py-3">
                       <Badge
                         variant="outline"
-                        className={`gap-1.5 px-2.5 py-0.5 text-xs font-medium capitalize border ${
-                          member.role === "admin"
+                        className={`gap-1.5 px-2.5 py-0.5 text-xs font-medium capitalize border ${member.role === "admin"
                             ? "border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-800/60 dark:bg-purple-950/40 dark:text-purple-300"
                             : "border-slate-200 bg-slate-50 text-slate-600 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-400"
-                        }`}
+                          }`}
                       >
                         {member.role === "admin" ? (
                           <UserCog className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
@@ -300,11 +318,10 @@ export default function MembersPage() {
                     <TableCell className="py-3">
                       <Badge
                         variant="outline"
-                        className={`capitalize text-xs font-medium ${
-                          !member.is_deleted
+                        className={`capitalize text-xs font-medium ${!member.is_deleted
                             ? "border-emerald-500/30 text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 dark:text-emerald-400"
                             : "border-destructive/30 text-destructive bg-destructive/10"
-                        }`}
+                          }`}
                       >
                         {member.is_deleted ? "inactive" : "active"}
                       </Badge>
@@ -338,7 +355,7 @@ export default function MembersPage() {
                             <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
                             Edit Role
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleOpenDeactivateModal(member) } className="gap-2 cursor-pointer text-destructive focus:text-destructive">
+                          <DropdownMenuItem onClick={() => handleOpenDeactivateModal(member)} className="gap-2 cursor-pointer text-destructive focus:text-destructive">
                             <Trash2 className="h-3.5 w-3.5" />
                             Deactivate
                           </DropdownMenuItem>

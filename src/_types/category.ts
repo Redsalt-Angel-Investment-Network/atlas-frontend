@@ -1,4 +1,12 @@
-export type CategorySchemaFieldsType = {
+export type CategorySchemaFieldType = {
+  id: string;
+  name: string;
+  type: string;
+  required: boolean;
+  position: number;
+};
+
+export type CreateCategorySchemaFieldType = {
   name: string;
   type: string;
   required: boolean;
@@ -6,8 +14,9 @@ export type CategorySchemaFieldsType = {
 };
 
 export type CategorySchemaType = {
+  id: string;
   version: number;
-  fields: CategorySchemaFieldsType[];
+  fields: CategorySchemaFieldType[];
 };
 
 export type CategoryType = {
@@ -27,12 +36,12 @@ export type CreateCategoryPayload = {
   name: string;
   description?: string;
   is_active: boolean;
-  schema: CategorySchemaFieldsType[];
+  schema: CreateCategorySchemaFieldType[];
 };
 
 export type UpdateCategoryPayload = {
   name: string;
   description?: string;
   is_active: boolean;
-  schema: CategorySchemaFieldsType[];
+  schema: CreateCategorySchemaFieldType[];
 };

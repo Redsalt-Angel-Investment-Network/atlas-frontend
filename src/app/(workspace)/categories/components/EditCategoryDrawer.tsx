@@ -203,7 +203,6 @@ export function EditCategoryDrawer({
                       control={control}
                       errors={errors}
                       onRemove={remove}
-                      t={t}
                     />
                   ))}
                 </div>

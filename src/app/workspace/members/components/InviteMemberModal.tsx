@@ -21,16 +21,19 @@ export function InviteMemberModal({ open, onClose }: Props) {
   const [serverError, setServerError] = useState<string | null>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
 
-  // Reset form state each time the modal is opened fresh
+  function resetForm() {
+    setValues({ email: "" });
+    setErrors({});
+    setStatus("idle");
+    setServerError(null);
+  }
+
   useEffect(() => {
-    if (open) {
-      setValues({ email: "" });
-      setErrors({});
-      setStatus("idle");
-      setServerError(null);
-      const t = setTimeout(() => emailInputRef.current?.focus(), 0);
-      return () => clearTimeout(t);
-    }
+    if (!open) return;
+
+    const t = setTimeout(() => emailInputRef.current?.focus(), 0);
+
+    return () => clearTimeout(t);
   }, [open]);
 
   // Close on Escape
@@ -157,9 +160,8 @@ export function InviteMemberModal({ open, onClose }: Props) {
                 placeholder="teammate@company.com"
                 aria-invalid={!!errors.email}
                 aria-describedby={errors.email ? "invite-email-error" : undefined}
-                className={`mt-1 w-full rounded-md border px-3 py-2 text-sm text-gray-900 bg-white outline-none transition-colors placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.email ? "border-red-400" : "border-gray-300"
-                }`}
+                className={`mt-1 w-full rounded-md border px-3 py-2 text-sm text-gray-900 bg-white outline-none transition-colors placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.email ? "border-red-400" : "border-gray-300"
+                  }`}
               />
               {errors.email && (
                 <p id="invite-email-error" className="mt-1 text-xs text-red-600">

@@ -6,14 +6,12 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useEffect } from "react";
-import { parseCookies, setCookie, destroyCookie } from "nookies";
+import { setCookie, destroyCookie } from "nookies";
 
 import {
   AuthContextType,
   AuthState,
   LoginResponse,
-  UserType,
 } from "@/_types/auth";
 import { WorkspaceMemberType } from "@/_types/workspaceMembers";
 
@@ -33,34 +31,19 @@ export const cookieOptions = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [authState, setAuthState] = useState<AuthState>(INITIAL_STATE);
-  const [isLoading, setIsLoading] = useState(true);
+type AuthProviderProps = {
+  children: ReactNode;
+  initialAuthState?: AuthState;
+};
 
-  useEffect(() => {
-    const cookies = parseCookies();
+export function AuthProvider({
+  children,
+  initialAuthState = INITIAL_STATE,
+}: AuthProviderProps) {
+  const [authState, setAuthState] =
+    useState<AuthState>(initialAuthState);
 
-    if (cookies.userData && cookies.accessToken) {
-      try {
-        const user: UserType = JSON.parse(cookies.userData);
-
-        const memberships: WorkspaceMemberType[] = cookies.memberships
-          ? JSON.parse(cookies.memberships)
-          : [];
-
-        setAuthState({
-          user,
-          accessToken: cookies.accessToken,
-          refreshToken: cookies.refreshToken || null,
-          memberships,
-        });
-      } catch (err) {
-        console.error("Failed to parse auth cookies", err);
-      }
-    }
-
-    setIsLoading(false);
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
 
   const currentMembership =
     authState.memberships.find(
@@ -98,24 +81,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const switchWorkspace = (membershipId: string) => {
-    const updatedMemberships = authState.memberships.map(
-      (workspace) => ({
-        ...workspace,
-        is_current: workspace.id === membershipId,
-      }),
-    );
+    setAuthState((previousState) => {
+      const updatedMemberships = previousState.memberships.map(
+        (workspace) => ({
+          ...workspace,
+          is_current: workspace.id === membershipId,
+        }),
+      );
 
-    setAuthState((previousState) => ({
-      ...previousState,
-      memberships: updatedMemberships,
-    }));
+      setCookie(
+        null,
+        "memberships",
+        JSON.stringify(updatedMemberships),
+        cookieOptions,
+      );
 
-    setCookie(
-      null,
-      "memberships",
-      JSON.stringify(updatedMemberships),
-      cookieOptions,
-    );
+      return {
+        ...previousState,
+        memberships: updatedMemberships,
+      };
+    });
   };
 
   const logout = () => {

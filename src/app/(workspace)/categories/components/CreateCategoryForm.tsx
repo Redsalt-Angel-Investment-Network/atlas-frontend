@@ -178,7 +178,6 @@ export function CreateCategoryDrawer({
                       control={control}
                       errors={errors}
                       onRemove={remove}
-                      t={t}
                     />
                   ))}
                 </div>

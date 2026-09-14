@@ -55,22 +55,41 @@ export default function SchemasListPage() {
   const [error, setError] = useState<string | null>(null);
   const [openCreateCategoryDrawer, setopenCreateCategoryDrawer] = useState(false);
   const [openDeleteCategoryModal, setOpenDeleteCategoryModal] = useState(false);
-  const [ selectedCategoryForDeletion, setSelectedCategoryForDeletion ] = useState<CategoryType | null>(null);
+  const [selectedCategoryForDeletion, setSelectedCategoryForDeletion] = useState<CategoryType | null>(null);
   const [openEditCategoryDrawer, setOpenEditCategoryDrawer] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>( null );
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
 
-  const fetchCategories = async () => {
-      setLoading(true);
-      setError(null);
-      getCategoryApi()
-        .then(setCategories)
-        .catch((err) => setError(err.message ?? "Failed to load categories"))
-        .finally(() => setLoading(false));
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadCategories = async () => {
+      try {
+        const data = await getCategoryApi();
+
+        if (!cancelled) {
+          setCategories(data);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            err instanceof Error
+              ? err.message
+              : "Failed to load categories"
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
     };
-  
-    useEffect(() => {
-      fetchCategories();
-    }, []);
+
+    loadCategories();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleCreateCategory = async (
     data: CreateCategoryPayload,
@@ -83,7 +102,7 @@ export default function SchemasListPage() {
       setopenCreateCategoryDrawer(false);
 
       toast.success(t("createCategoryForm.toast.success"));
-    } catch (err: any) {
+    } catch (err) {
       toast.error(t("createCategoryForm.toast.error"));
 
       throw err;
@@ -107,9 +126,9 @@ export default function SchemasListPage() {
         prev.map((category) =>
           category.id === id
             ? {
-                ...category,
-                is_active: false,
-              }
+              ...category,
+              is_active: false,
+            }
             : category,
         ),
       );
@@ -177,7 +196,7 @@ export default function SchemasListPage() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toISOString().split("T")[0]; 
+    return date.toISOString().split("T")[0];
   };
 
 
@@ -190,13 +209,13 @@ export default function SchemasListPage() {
   };
 
   const tableHeaders = [
-  { label: t("table.schemaName"), className: "w-[280px]" },
-  { label: t("table.description"), className: "w-[320px]" },
-  { label: t("table.fields"), className: "w-[120px]" },
-  { label: t("table.status"), className: "w-[120px]" },
-  { label: t("table.lastUpdated"), className: "w-[140px]" },
-  { label: t("table.actions"), className: "w-[80px] text-right" },
-];
+    { label: t("table.schemaName"), className: "w-[280px]" },
+    { label: t("table.description"), className: "w-[320px]" },
+    { label: t("table.fields"), className: "w-[120px]" },
+    { label: t("table.status"), className: "w-[120px]" },
+    { label: t("table.lastUpdated"), className: "w-[140px]" },
+    { label: t("table.actions"), className: "w-[80px] text-right" },
+  ];
 
   return (
     <div className="p-6 pt-0 max-w-10xl mx-auto space-y-6">

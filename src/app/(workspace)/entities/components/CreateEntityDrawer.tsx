@@ -25,8 +25,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { CreateEntityPayload } from "@/_types/entities";
-import { CategoryType } from "@/_types/category";
+import { CreateEntityAttributePayload, CreateEntityPayload } from "@/_types/entities";
+import { CategorySchemaType, CategoryType } from "@/_types/category";
 import { entityFormSchema, EntityFormValues } from "@/app/(workspace)/entities/schema";
 import { EntityField } from "@/app/(workspace)/entities/components/EntityField";
 
@@ -41,27 +41,27 @@ interface CreateEntityDrawerProps {
 
 function getCategorySchema(category: CategoryType | undefined) {
   if (!category) return null;
-  const schema = category.schema as any;
+  const schema = category.schema as CategorySchemaType;
   if (!schema?.id) return null;
   const fields = schema.fields ?? [];
-  if (fields.some((f: any) => !f.id)) return null;
+  if (fields.some((field) => !field.id)) return null;
   return {
     id: schema.id,
-    category_id: schema.category_id ?? category.id,
+    category_id: category.id,
     version: schema.version ?? 1,
     fields: fields
-      .map((f: any) => ({
-        id: f.id,
-        name: f.name,
-        type: f.type,
-        required: f.required,
-        position: f.position ?? 0,
+      .map((field) => ({
+        id: field.id,
+        name: field.name,
+        type: field.type,
+        required: field.required,
+        position: field.position ?? 0,
       }))
-      .sort((a: any, b: any) => a.position - b.position),
+      .sort((a, b) => a.position - b.position),
   };
 }
 
-function normalizeValue(value: any, type: string): any {
+function normalizeValue(value: unknown, type: string) {
   const t = type.toLowerCase();
   if (t === "boolean") return Boolean(value);
   if (t === "number") {
@@ -85,9 +85,9 @@ function normalizeValue(value: any, type: string): any {
 
 export function CreateEntityDrawer({
   isOpen = false,
-  onOpenChange = () => {},
+  onOpenChange = () => { },
   categories,
-  onSubmitApi = async () => {},
+  onSubmitApi = async () => { },
 }: CreateEntityDrawerProps) {
   const t = useTranslations("entities.createEntityForm");
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -119,9 +119,9 @@ export function CreateEntityDrawer({
     if (!schema) { setValue("attributes", []); return; }
     setValue(
       "attributes",
-      schema.fields.map((f: any) => ({
-        field_id: f.id,
-        value: f.type.toLowerCase() === "boolean" ? false : "",
+      schema.fields.map((field) => ({
+        field_id: field.id,
+        value: field.type.toLowerCase() === "boolean" ? false : "",
       })),
       { shouldValidate: false, shouldDirty: false }
     );
@@ -140,16 +140,21 @@ export function CreateEntityDrawer({
 
   const onSubmit = async (values: EntityFormValues) => {
     setSubmitError(null);
-    if (!categorySchema) { 
-      setSubmitError(t("validation.schemaNotFound")); 
-      return; 
+    if (!categorySchema) {
+      setSubmitError(t("validation.schemaNotFound"));
+      return;
     }
 
     try {
-      const attributes = schemaFields.map((field: any, i: number) => ({
-        field_id: field.id,
-        value: normalizeValue(values.attributes[i]?.value, field.type),
-      }));
+      const attributes: CreateEntityAttributePayload[] = schemaFields.map(
+        (field, i) => ({
+          field_id: field.id,
+          value: normalizeValue(
+            values.attributes[i]?.value,
+            field.type,
+          ),
+        }),
+      );
       await onSubmitApi({
         category_id: selectedCategoryId,
         category_schema_id: categorySchema.id,
@@ -164,8 +169,8 @@ export function CreateEntityDrawer({
       const key = error instanceof Error ? error.message : "createFailed";
       setSubmitError(
         key === "invalidNumber" ? t("validation.invalidNumber") :
-        key === "invalidJson" ? t("validation.invalidJson") :
-        key || t("toast.error")
+          key === "invalidJson" ? t("validation.invalidJson") :
+            key || t("toast.error")
       );
     }
   };
@@ -257,7 +262,7 @@ export function CreateEntityDrawer({
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      {schemaFields.map((field: any, index: number) => (
+                      {schemaFields.map((field, index) => (
                         <EntityField
                           key={field.id}
                           field={field}

@@ -303,8 +303,8 @@ export default function WorkflowsListPage() {
                       </p>
                       <p className="text-xs text-muted-foreground mt-1 max-w-sm">
                         {searchTerm ||
-                        statusFilter !== "all" ||
-                        triggerFilter !== "all"
+                          statusFilter !== "all" ||
+                          triggerFilter !== "all"
                           ? t("emptyState.searchNoResults")
                           : t("emptyState.noData")}
                       </p>

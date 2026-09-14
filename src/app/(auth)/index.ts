@@ -38,7 +38,7 @@ export async function loginApi(payload: LoginPayload): Promise<LoginResponse> {
 }
 
 
-export async function logoutApi(payload: LogoutPayload): Promise<{}> {
+export async function logoutApi(payload: LogoutPayload): Promise<void> {
   const response = await apiFetch("/accounts/logout/", {
     method: "POST",
     body: JSON.stringify(payload),

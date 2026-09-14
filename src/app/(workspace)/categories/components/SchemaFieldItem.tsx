@@ -15,6 +15,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 
 import { CategoryFormValues, FIELD_TYPES } from "../schema";
+import { useTranslations } from "next-intl";
 
 interface SchemaFieldItemProps {
   id: string;
@@ -23,7 +24,6 @@ interface SchemaFieldItemProps {
   control: Control<CategoryFormValues>;
   errors: FieldErrors<CategoryFormValues>;
   onRemove: (index: number) => void;
-  t: (key: string, values?: Record<string, any>) => string;
 }
 
 export function SchemaFieldItem({
@@ -32,8 +32,9 @@ export function SchemaFieldItem({
   control,
   errors,
   onRemove,
-  t,
 }: SchemaFieldItemProps) {
+  const t = useTranslations("categories.editCategoryForm");
+  
   const fieldError = errors.schema?.fields?.[index]?.name?.message;
 
   return (

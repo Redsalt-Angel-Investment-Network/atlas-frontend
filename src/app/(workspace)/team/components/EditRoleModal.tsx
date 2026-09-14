@@ -36,14 +36,8 @@ export function EditRoleModal({
   member,
   onSave,
 }: EditRoleModalProps) {
-  const [selectedRole, setSelectedRole] = useState<Role>("member");
+  const [selectedRole, setSelectedRole] = useState(member?.role ?? "member");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (member) {
-      setSelectedRole(member.role);
-    }
-  }, [member]);
 
   if (!member) return null;
 

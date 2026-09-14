@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { getLocale } from "next-intl/server";
+import { cookies } from "next/headers";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { Providers } from "@/utils/providers";
 import { AuthProvider } from "./_contexts/AuthContext";
+import { AuthState } from "@/_types/auth";
 
 const fontSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -27,6 +29,34 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const locale = await getLocale();
+  const cookieStore = await cookies();
+
+  const userData = cookieStore.get("userData")?.value;
+  const accessToken = cookieStore.get("accessToken")?.value;
+  const refreshToken = cookieStore.get("refreshToken")?.value;
+  const membershipsCookie = cookieStore.get("memberships")?.value;
+
+  let initialAuthState: AuthState = {
+    user: null,
+    accessToken: null,
+    refreshToken: null,
+    memberships: [],
+  };
+
+  if (userData && accessToken) {
+    try {
+      initialAuthState = {
+        user: JSON.parse(userData),
+        accessToken,
+        refreshToken: refreshToken ?? null,
+        memberships: membershipsCookie
+          ? JSON.parse(membershipsCookie)
+          : [],
+      };
+    } catch {
+      // Keep the unauthenticated initial state.
+    }
+  }
 
   return (
     <html
@@ -35,7 +65,7 @@ export default async function RootLayout({
       className={`${fontSans.variable} ${fontMono.variable} font-sans h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <AuthProvider>
+        <AuthProvider initialAuthState={initialAuthState}>
           <Providers locale={locale}>{children}</Providers>
         </AuthProvider>
         <Toaster position="top-right" richColors />
