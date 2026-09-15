@@ -46,7 +46,7 @@ export function AuthProvider({
   const [isLoading, setIsLoading] = useState(false);
 
   const currentMembership =
-    authState.memberships.find(
+    (authState.memberships ?? []).find(
       (workspace) => workspace.is_current,
     ) ?? null;
 
