@@ -1,4 +1,4 @@
-import { CreateEntityPayload, Entity, EntityRead } from "@/_types/entities";
+import { CreateEntityPayload, Entity, EntityRead, UpdateEntityPayload } from "@/_types/entities";
 import { authFetch } from "@/utils/apiClient";
 
 export async function getEntitiesApi(
@@ -52,4 +52,30 @@ export async function createEntityApi(
   }
 
   return res.json();
+}
+
+export async function updateEntityApi(
+  entityId: string,
+  entityUpdateData: UpdateEntityPayload,
+): Promise<EntityRead> {
+  const res = await authFetch(
+    `/entities/${entityId}/`,
+    {
+      method: "PATCH",
+      body: JSON.stringify(entityUpdateData),
+    },
+  );
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(
+      errorData?.detail ||
+        errorData?.message ||
+        "Failed to update entity",
+    );
+  }
+
+  const data: EntityRead = await res.json();
+
+  return data;
 }

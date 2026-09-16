@@ -375,6 +375,49 @@ export const messages = {
           "error": "Failed to create entity. Please try again."
         }
       },
+      editEntityForm: {
+        title: "Edit Entity",
+        description: "Update the entity name and values defined by its category.",
+        basicDetails: "Basic Details",
+        basicDetailsDescription: "Update the entity information below.",
+        fields: {
+          name: {
+            label: "Entity Name",
+            placeholder: "Enter entity name",
+          },
+          category: {
+            label: "Category",
+            unknown: "Unknown category",
+            readOnly:"The category cannot be changed when editing an entity.",           
+          },
+          schemaVersion: "Schema Version",
+          required: "Required",
+          optional: "Optional",
+          valuePlaceholder:  "Enter {field}",   
+        },
+        attributes: {
+          title: "Entity Attributes",
+          description: "These fields are generated from the entity's category.",
+          noFields: "This category has no additional fields.",     
+        },
+        validation: {
+          nameRequired: "Entity name is required.",
+          nameMaxLength: "Entity name must be 255 characters or fewer.",
+          fieldRequired: "This field is required.",
+          schemaNotFound: "The category schema could not be found.",
+          invalidNumber: "Please enter a valid number.",
+          invalidJson: "Please enter valid JSON.",  
+        },
+        buttons: {
+          cancel: "Cancel",
+          save: "Save Changes",
+          saving: "Saving...",
+        },
+        toast: {
+          success: "Entity updated successfully.",
+          error: "Failed to update entity. Please try again.",   
+        },
+      },
     },
     workflows: {
       title: "Workflows",
@@ -908,6 +951,49 @@ export const messages = {
           "success": "Entité créée avec succès.",
           "error": "Échec de la création de l'entité. Veuillez réessayer."
         }
+      },
+      editEntityForm: {
+        title: "Modifier l'entité",
+        description: "Mettre à jour le nom de l'entité et les valeurs définies par sa catégorie.",
+        basicDetails: "Informations de base",
+        basicDetailsDescription: "Mettez à jour les informations de l'entité ci-dessous.",
+        fields: {
+          name: {
+            label: "Nom de l'entité",
+            placeholder: "Entrez le nom de l'entité",
+          },
+          category: {
+            label: "Catégorie",
+            unknown: "Catégorie inconnue",
+            readOnly: "La catégorie ne peut pas être modifiée lors de la modification d'une entité.",
+          },
+          schemaVersion: "Version du schéma",
+          required: "Obligatoire",
+          optional: "Optionnel",
+          valuePlaceholder: "Entrez {field}",
+        },
+        attributes: {
+          title: "Attributs de l'entité",
+          description: "Ces champs sont générés à partir de la catégorie de l'entité.",
+          noFields: "Cette catégorie n'a pas de champs supplémentaires.",
+        },
+        validation: {
+          nameRequired: "Le nom de l'entité est requis.",
+          nameMaxLength: "Le nom de l'entité doit comporter 255 caractères ou moins.",
+          fieldRequired: "Ce champ est requis.",
+          schemaNotFound: "Le schéma de la catégorie n'a pas été trouvé.",
+          invalidNumber: "Veuillez entrer un nombre valide.",
+          invalidJson: "Veuillez entrer un JSON valide.",
+        },
+        buttons: {
+          cancel: "Annuler",
+          save: "Enregistrer les modifications",
+          saving: "Enregistrement...",
+        },
+        toast: {
+          success: "Entité mise à jour avec succès.",
+          error: "Échec de la mise à jour de l'entité. Veuillez réessayer.",
+        },
       },
     },
     workflows: {

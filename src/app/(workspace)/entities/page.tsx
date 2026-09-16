@@ -40,13 +40,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { type Entity, CreateEntityPayload  } from "@/_types/entities";
-import { deleteEntityAPI, getEntitiesApi,  createEntityApi  } from "@/app/(workspace)/entities/index";
+import { type Entity, CreateEntityPayload, UpdateEntityPayload, } from "@/_types/entities";
+import { deleteEntityAPI, getEntitiesApi,  createEntityApi, updateEntityApi  } from "@/app/(workspace)/entities/index";
 import { getCategoryApi } from "@/app/(workspace)/categories/index";
 import { CategoryType } from "@/_types/category";
 import { toast } from "sonner";
 import { DeleteEntityModal } from "./components/DeleteEntityModal";
 import { CreateEntityDrawer } from "./components/CreateEntityDrawer";
+import {EditEntityDrawer } from "./components/EditEntityDrawer";
 
 const COLUMN_WIDTHS = {
   select: "w-[4%]",
@@ -80,6 +81,8 @@ export default function EntitiesListPage() {
   const [openDeleteEntityModal, setOpenDeleteEntityModal] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
 
+  const [openEditEntityDrawer, setOpenEditEntityDrawer] = useState(false);
+
 
   const fetchEntities = (categoryId?: string) => {
     return getEntitiesApi(categoryId);
@@ -98,6 +101,42 @@ export default function EntitiesListPage() {
       toast.success(t("createEntityForm.toast.success"));
     } catch (error) {
       toast.error(t("createEntityForm.toast.error"));
+      throw error;
+    }
+  };
+
+  const handleUpdateEntity = async (
+    data: UpdateEntityPayload,
+  ): Promise<void> => {
+    if (!selectedEntity) return;
+
+    try {
+      const updatedEntity = await updateEntityApi(
+        selectedEntity.id,
+        data,
+      );
+
+      setEntities((prev) =>
+        prev.map((entity) =>
+          entity.id === updatedEntity.id
+            ? updatedEntity
+            : entity,
+        ),
+      );
+
+      setOpenEditEntityDrawer(false);
+      setSelectedEntity(null);
+
+      toast.success(
+        t("editEntityForm.toast.success"),
+      );
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : t("editEntityForm.toast.error"),
+      );
+
       throw error;
     }
   };
@@ -490,13 +529,16 @@ export default function EntitiesListPage() {
                                 <span>{t("detail.viewDetails")}</span>
                               </Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2 cursor-pointer text-xs">
+                            <DropdownMenuItem 
+                              className="gap-2 cursor-pointer text-xs"
+                              onSelect={(e) => {
+                                e.preventDefault();
+                                setSelectedEntity(entity);
+                                setOpenEditEntityDrawer(true);
+                              }}
+                            >
                               <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
                               <span>{t("actions.edit")}</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2 cursor-pointer text-xs">
-                              <Copy className="h-3.5 w-3.5 text-muted-foreground" />
-                              <span>{t("actions.duplicate")}</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
@@ -525,6 +567,14 @@ export default function EntitiesListPage() {
           onOpenChange={setOpenCreateEntityDrawer}
           categories={categories}
           onSubmitApi={handleCreateEntity}
+        />
+
+       <EditEntityDrawer
+          isOpen={openEditEntityDrawer}
+          onOpenChange={() => setOpenEditEntityDrawer(false)}
+          initialData={selectedEntity}
+          categories={categories}
+          onSubmitApi={handleUpdateEntity}
         />
 
         {/* Delete Category Modal */}
