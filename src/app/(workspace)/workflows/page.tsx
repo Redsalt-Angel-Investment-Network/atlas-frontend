@@ -19,6 +19,7 @@ import {
   Activity,
   GitFork,
   ArrowRight,
+  RotateCcw,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -47,9 +48,9 @@ import {
 import WorkflowStats from "./components/WorkflowStats";
 import WorkflowFilters from "./components/WorkflowFilters";
 import { CreateWorkflowDrawer } from "./components/CreateWorkflowDrawer";
-import { createWorkflowApi, getWorkflowsApi } from "./index";
+import { createWorkflowApi, getWorkflowsApi, restoreWorkflowApi, deleteWorkflowAPI } from "./index";
+import { RestoreArchivedWorkflowModal } from "./components/RestoreWorkflow";
 import { DeleteWorkflowModal } from "./components/DeleteWorkflowModal";
-import { deleteWorkflowAPI } from "./index";
 
 export default function WorkflowsListPage() {
   const t = useTranslations("workflows");
@@ -61,8 +62,9 @@ export default function WorkflowsListPage() {
   const [error, setError] = useState<string | null>(null);
   const [openCreateDrawer, setOpenCreateDrawer] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [selectedWorkflowForDelete, setSelectedWorkflowForDelete] =
-    useState<WorkflowType | null>(null);
+  const [selectedWorkflowForDelete, setSelectedWorkflowForDelete] = useState<WorkflowType | null>(null);
+  const [openRestoreModal, setOpenRestoreModal] = useState(false)
+  const [selectedWorkflowForRestore, setSelectedWorkflowForRestore] = useState<WorkflowType | null>(null);
 
   const handleOpenDeleteModal = (workflow: WorkflowType) => {
     setSelectedWorkflowForDelete(workflow);
@@ -108,6 +110,34 @@ export default function WorkflowsListPage() {
       toast.success(t("createDrawer.toast.success"));
     } catch (err) {
       toast.error(t("createDrawer.toast.error"));
+      throw err;
+    }
+  };
+
+  const handleOpenRestoreModal = (workflow: WorkflowType) => {
+    setSelectedWorkflowForRestore(workflow);
+    setOpenRestoreModal(true);
+  };
+
+  const handleConfirmRestore = async (): Promise<void> => {
+    if (!selectedWorkflowForRestore) return;
+
+    try {
+      const restoredWorkflow = await restoreWorkflowApi(
+        selectedWorkflowForRestore.id,
+      );
+
+      setWorkflows((prev) =>
+        prev.map((workflow) =>
+          workflow.id === restoredWorkflow.id
+            ? restoredWorkflow
+            : workflow,
+        ),
+      );
+
+      toast.success(t("restoreModal.toast.success"));
+    } catch (err) {
+      toast.error(t("restoreModal.toast.error"));
       throw err;
     }
   };
@@ -454,6 +484,14 @@ export default function WorkflowsListPage() {
                                 <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
                                 <span>{t("actions.edit")}</span>
                               </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleOpenRestoreModal(workflow)}
+                                className="gap-2 cursor-pointer text-xs"
+                                disabled = {workflow.is_active}
+                              >
+                                <RotateCcw className="h-3.5 w-3.5 text-muted-foreground" />
+                                <span>{t("actions.restore")}</span>
+                              </DropdownMenuItem>
 
                               <DropdownMenuSeparator />
 
@@ -485,6 +523,15 @@ export default function WorkflowsListPage() {
         onOpenChange={() => setOpenDeleteModal(false)}
         workflow={selectedWorkflowForDelete}
         onDelete={handleDeleteWorkflow}
+      />
+
+      {/* Restore Workflow Modal */}
+      <RestoreArchivedWorkflowModal
+        isOpen={openRestoreModal}
+        onClose={() => setOpenRestoreModal(false)}
+        workflowName={selectedWorkflowForRestore?.name}
+        workflowReference={selectedWorkflowForRestore?.reference}
+        onConfirmRestore={handleConfirmRestore}
       />
     </div>
   );

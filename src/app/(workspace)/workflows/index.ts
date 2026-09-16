@@ -77,3 +77,21 @@ export async function deleteWorkflowAPI(id: string): Promise<void> {
     throw new Error(errorData?.message || "Failed to delete workflow");
   }
 }
+export const restoreWorkflowApi = async (
+  workflowId: string,
+): Promise<WorkflowType> => {
+  const response = await authFetch(`/workflows/${workflowId}/restore/`, {
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+
+    throw new Error(
+      errorData?.detail || "Failed to restore workflow",
+    );
+  }
+
+  const data: WorkflowType = await response.json();
+  return data;
+};

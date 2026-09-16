@@ -470,6 +470,7 @@ export const messages = {
         runWorkflow: "Run Workflow",
         edit: "Edit",
         delete: "Delete",
+        restore: "Restore"
       },
       executionStatus: {
         success: "Success",
@@ -573,6 +574,18 @@ export const messages = {
         toast: {
           success: "Workflow deleted successfully",
           error: "Failed to delete workflow"
+        }
+      },
+      restoreModal: {
+        title: "Restore Archived Workflow",
+        description: "Restoring this workflow will return it to your workflows list. You can activate it again when you're ready.",
+        restoreNotice: "Status will be set to inactive upon restoration.",
+        cancel: "Cancel",
+        confirm: "Restore Workflow",
+        restoring: "Restoring...",
+        toast: {
+          success: "Workflow restored successfully",
+          error: "Failed to restore workflow"
         }
       }
     },
@@ -1061,6 +1074,7 @@ export const messages = {
         runWorkflow: "Exécuter le flux de travail",
         edit: "Modifier",
         delete: "Supprimer",
+        restore: "Restaurer"
       },
       executionStatus: {
         success: "Réussi",
@@ -1175,6 +1189,18 @@ export const messages = {
         toast: {
           success: "Flux de travail supprimé avec succès",
           error: "Échec de la suppression du flux de travail"
+        }
+      },
+      restoreModal: {
+        title: "Restaurer le flux archivé",
+        description: "La restauration de ce workflow le réintégrera dans votre liste de workflows. Vous pourrez le réactiver lorsque vous serez prêt.",
+        restoreNotice: "Le statut sera défini sur inactif lors de la restauration.",
+        cancel: "Annuler",
+        confirm: "Restaurer le flux",
+        restoring: "Restauration...",
+        toast: {
+          success: "Flux de travail restauré avec succès",
+          error: "Échec de la restauration du flux de travail"
         }
       }
     },
