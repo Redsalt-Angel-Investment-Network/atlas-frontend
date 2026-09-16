@@ -563,6 +563,18 @@ export const messages = {
           success: "Workflow created successfully"
         },
       },
+      deleteWorkflow: {
+        title: "Delete Workflow",
+        subtitle: "Are you sure you want to delete this workflow? This action cannot be undone.",
+        warning: "Deleting this workflow will stop all active triggers and ongoing executions immediately.",
+        cancel: "Cancel",
+        delete: "Delete Workflow",
+        deleting: "Deleting...",
+        toast: {
+          success: "Workflow deleted successfully",
+          error: "Failed to delete workflow"
+        }
+      }
     },
   },
   fr: {
@@ -1153,6 +1165,18 @@ export const messages = {
           success: "Flux de travail créé avec succès"
         }
       },
+      deleteWorkflow: {
+        title: "Supprimer le flux de travail",
+        subtitle: "Êtes-vous sûr de vouloir supprimer ce flux de travail ? Cette action est irréversible.",
+        warning: "La suppression de ce flux de travail arrêtera immédiatement tous les déclencheurs actifs et les exécutions en cours.",
+        cancel: "Annuler",
+        delete: "Supprimer le flux",
+        deleting: "Suppression...",
+        toast: {
+          success: "Flux de travail supprimé avec succès",
+          error: "Échec de la suppression du flux de travail"
+        }
+      }
     },
   },
 };

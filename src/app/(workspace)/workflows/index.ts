@@ -64,3 +64,16 @@ export async function updateWorkflowApi(
   const data: WorkflowType = await response.json();
   return data;
 }
+
+export async function deleteWorkflowAPI(id: string): Promise<void> {
+  const endpoint = `/workflows/${id}/`;
+
+  const res = await authFetch(endpoint, {
+    method: "DELETE",
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData?.message || "Failed to delete workflow");
+  }
+}

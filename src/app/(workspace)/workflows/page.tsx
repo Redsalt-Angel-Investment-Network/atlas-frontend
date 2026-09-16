@@ -48,6 +48,8 @@ import WorkflowStats from "./components/WorkflowStats";
 import WorkflowFilters from "./components/WorkflowFilters";
 import { CreateWorkflowDrawer } from "./components/CreateWorkflowDrawer";
 import { createWorkflowApi, getWorkflowsApi } from "./index";
+import { DeleteWorkflowModal } from "./components/DeleteWorkflowModal";
+import { deleteWorkflowAPI } from "./index";
 
 export default function WorkflowsListPage() {
   const t = useTranslations("workflows");
@@ -58,6 +60,40 @@ export default function WorkflowsListPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [openCreateDrawer, setOpenCreateDrawer] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [selectedWorkflowForDelete, setSelectedWorkflowForDelete] =
+    useState<WorkflowType | null>(null);
+
+  const handleOpenDeleteModal = (workflow: WorkflowType) => {
+    setSelectedWorkflowForDelete(workflow);
+    setOpenDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setSelectedWorkflowForDelete(null);
+    setOpenDeleteModal(false);
+  };
+
+ const handleDeleteWorkflow = async (id: string) => {
+    try {
+      await deleteWorkflowAPI(id);
+      setWorkflows((prev) =>
+        prev.map((workflow) =>
+          workflow.id === id
+            ? {
+              ...workflow,
+              is_active: false,
+            }
+            : workflow,
+        ),
+      );
+      handleCloseDeleteModal();
+      toast.success(t("deleteWorkflow.toast.success"));
+    } catch (error) {
+      toast.error(t("deleteWorkflow.toast.error"));
+      throw error;
+    }
+  };
 
   const handleCreateWorkflow = async (
     data: CreateWorkflowPayload,
@@ -421,7 +457,7 @@ export default function WorkflowsListPage() {
 
                               <DropdownMenuSeparator />
 
-                              <DropdownMenuItem className="gap-2 cursor-pointer text-xs text-destructive focus:text-destructive">
+                              <DropdownMenuItem onClick={() => handleOpenDeleteModal(workflow)} className="gap-2 cursor-pointer text-xs text-destructive focus:text-destructive">
                                 <Trash2 className="h-3.5 w-3.5" />
                                 <span>{t("actions.delete")}</span>
                               </DropdownMenuItem>
@@ -442,6 +478,13 @@ export default function WorkflowsListPage() {
         isOpen={openCreateDrawer}
         onOpenChange={setOpenCreateDrawer}
         onSubmitApi={handleCreateWorkflow}
+      />
+
+      <DeleteWorkflowModal
+        open={openDeleteModal}
+        onOpenChange={() => setOpenDeleteModal(false)}
+        workflow={selectedWorkflowForDelete}
+        onDelete={handleDeleteWorkflow}
       />
     </div>
   );
