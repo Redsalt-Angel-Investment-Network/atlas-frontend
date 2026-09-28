@@ -19,6 +19,8 @@ const httpRequestConfigSchema = z.object({
 
   headers: z.record(z.string(), z.string()),
 
+  query: z.record(z.string(), z.string()),
+
   body: z.string(),
 });
 
@@ -45,14 +47,9 @@ export const httpRequestNode: NodeDefinition<HttpRequestConfig> = {
 
   outputs: [
     {
-      id: "success",
-      label: "Success",
+      id: "output",
+      label: "Output",
       type: "default",
-    },
-    {
-      id: "error",
-      label: "Error",
-      type: "error",
     },
   ],
 
@@ -60,6 +57,7 @@ export const httpRequestNode: NodeDefinition<HttpRequestConfig> = {
     method: "GET",
     url: "",
     headers: {},
+    query: {},
     body: "",
   },
 
@@ -83,6 +81,18 @@ export const httpRequestNode: NodeDefinition<HttpRequestConfig> = {
       label: "URL",
       type: "url",
       placeholder: "https://api.example.com/users",
+    },
+    {
+      name: "headers",
+      label: "Headers",
+      type: "json",
+      placeholder: '{"Authorization":"Bearer {{input.token}}"}',
+    },
+    {
+      name: "query",
+      label: "Query Parameters",
+      type: "json",
+      placeholder: '{"status":"active"}',
     },
     {
       name: "body",

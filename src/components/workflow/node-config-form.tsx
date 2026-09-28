@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 import type { NodeField } from "@/workflow/types";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { WorkflowValidationIssue } from "@/workflow/validation/workflow";
 
 type NodeConfigFormProps = {
@@ -107,6 +107,38 @@ function ConfigField({
             );
           }
 
+          if (field.type === "json") {
+            return (
+              <JsonField
+                value={
+                  (controllerField.value as Record<string, unknown>) ?? {}
+                }
+                onChange={controllerField.onChange}
+                placeholder={field.placeholder}
+              />
+            );
+          }
+
+          if (field.type === "number") {
+            return (
+              <Input
+                type="number"
+                value={controllerField.value ?? ""}
+                min={field.min}
+                max={field.max}
+                step={field.step ?? "any"}
+                placeholder={field.placeholder}
+                onChange={(event) => {
+                  const value = event.target.value;
+
+                  controllerField.onChange(
+                    value === "" ? null : Number(value)
+                  );
+                }}
+              />
+            );
+          }
+
           if (field.type === "textarea") {
             return (
               <Textarea
@@ -155,5 +187,72 @@ function ConfigField({
         </p>
       ))}
     </div>
+  );
+}
+
+function JsonField({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: Record<string, unknown>;
+  onChange: (value: Record<string, unknown>) => void;
+  placeholder?: string;
+}) {
+  const [text, setText] = useState(() =>
+    JSON.stringify(value ?? {}, null, 2),
+  );
+  const [isFocused, setIsFocused] = useState(false);
+
+  const displayValue = isFocused
+    ? text
+    : JSON.stringify(value ?? {}, null, 2);
+
+  return (
+    <Textarea
+      value={displayValue}
+      onFocus={() => {
+        setIsFocused(true);
+        setText(JSON.stringify(value ?? {}, null, 2));
+      }}
+      onBlur={() => {
+        setIsFocused(false);
+
+        try {
+          const parsed = JSON.parse(text);
+
+          if (
+            parsed &&
+            typeof parsed === "object" &&
+            !Array.isArray(parsed)
+          ) {
+            onChange(parsed);
+            setText(JSON.stringify(parsed, null, 2));
+          }
+        } catch {
+          // Keep the user's text so they can correct it.
+        }
+      }}
+      onChange={(event) => {
+        const nextText = event.target.value;
+
+        setText(nextText);
+
+        try {
+          const parsed = JSON.parse(nextText);
+
+          if (
+            parsed &&
+            typeof parsed === "object" &&
+            !Array.isArray(parsed)
+          ) {
+            onChange(parsed);
+          }
+        } catch {
+          // JSON is temporarily invalid while typing.
+        }
+      }}
+      placeholder={placeholder}
+    />
   );
 }

@@ -40,3 +40,10 @@ export type UpdateWorkflowPayload = {
   is_active?: boolean;
   definition: WorkflowDefinition;
 };
+
+export type WorkflowExecutionResponse = {
+  id: string;
+  status: string;
+  output: Record<string, unknown> | null;
+  error: Record<string, unknown> | null;
+};

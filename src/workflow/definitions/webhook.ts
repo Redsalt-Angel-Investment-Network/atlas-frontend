@@ -11,11 +11,6 @@ const webhookConfigSchema = z.object({
     "PATCH",
     "DELETE",
   ]),
-
-  path: z
-    .string()
-    .min(1, "Path is required")
-    .startsWith("/", "Path must start with /"),
 });
 
 export type WebhookConfig = z.infer<
@@ -24,8 +19,11 @@ export type WebhookConfig = z.infer<
 
 export const webhookNode: NodeDefinition<WebhookConfig> = {
   type: "webhook",
+
   label: "Webhook",
+
   description: "Receive an incoming HTTP request.",
+
   category: "trigger",
 
   inputs: [],
@@ -40,7 +38,6 @@ export const webhookNode: NodeDefinition<WebhookConfig> = {
 
   defaultConfig: {
     method: "POST",
-    path: "/webhook",
   },
 
   configSchema: webhookConfigSchema,
@@ -57,12 +54,6 @@ export const webhookNode: NodeDefinition<WebhookConfig> = {
         { label: "PATCH", value: "PATCH" },
         { label: "DELETE", value: "DELETE" },
       ],
-    },
-    {
-      name: "path",
-      label: "Path",
-      type: "text",
-      placeholder: "/webhook",
     },
   ],
 

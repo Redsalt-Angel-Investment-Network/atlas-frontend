@@ -12,16 +12,22 @@ import {
 import { create } from "zustand";
 
 import {
+  executeWorkflowApi,
   getWorkflowApi,
   updateWorkflowApi,
 } from "@/app/(workspace)/workflows";
 
+
 import { NodeType } from "../registry";
-import { validateConnection } from "../src/workflow/validation/connection";
+import { validateConnection } from "../validation/connection";
 import {
   validateWorkflow,
   type WorkflowValidationIssue,
 } from "../validation/workflow";
+
+
+import { WorkflowExecutionResponse } from "@/_types/workflows";
+// import { getWorkflowApi } from "@/app/(workspace)/workflows";
 
 export type WorkflowNodeData = {
   type: NodeType;
@@ -41,6 +47,13 @@ type ValidationState = {
   validationStatus: WorkflowValidationStatus;
 };
 
+export type WorkflowExecution = {
+  id: string;
+  status: string;
+  output: Record<string, unknown> | null;
+  error: Record<string, unknown> | null;
+};
+
 type WorkflowEditorState = {
   nodes: WorkflowFlowNode[];
   edges: Edge[];
@@ -54,9 +67,11 @@ type WorkflowEditorState = {
 
   isLoading: boolean;
   isSaving: boolean;
+  isExecuting: boolean;
   isDirty: boolean;
   saveError: string | null;
-
+  executionError: string | null;
+  execution: WorkflowExecutionResponse | null;
   changeCounter: number;
 
   onNodesChange: OnNodesChange<WorkflowFlowNode>;
@@ -79,6 +94,8 @@ type WorkflowEditorState = {
   loadWorkflow: (workflowId: string) => Promise<void>;
 
   saveWorkflow: () => Promise<void>;
+
+  executeWorkflow: () => Promise<void>;
 };
 
 function getValidationState(
@@ -142,8 +159,11 @@ export const useWorkflowEditorStore =
 
     isLoading: false,
     isSaving: false,
+    isExecuting: false,
     isDirty: false,
     saveError: null,
+    executionError: null,
+    execution: null,
 
     changeCounter: 0,
 
@@ -157,10 +177,10 @@ export const useWorkflowEditorStore =
         const selectedNodeStillExists =
           state.selectedNodeId
             ? nodes.some(
-              (node) =>
-                node.id ===
-                state.selectedNodeId
-            )
+                (node) =>
+                  node.id ===
+                  state.selectedNodeId
+              )
             : true;
 
         const shouldValidate =
@@ -175,23 +195,23 @@ export const useWorkflowEditorStore =
           );
 
         const nextState: Partial<WorkflowEditorState> =
-        {
-          nodes,
+          {
+            nodes,
 
-          selectedNodeId:
-            selectedNodeStillExists
-              ? state.selectedNodeId
-              : null,
+            selectedNodeId:
+              selectedNodeStillExists
+                ? state.selectedNodeId
+                : null,
 
-          isDirty: hasWorkflowChange
-            ? true
-            : state.isDirty,
+            isDirty: hasWorkflowChange
+              ? true
+              : state.isDirty,
 
-          changeCounter:
-            hasWorkflowChange
-              ? state.changeCounter + 1
-              : state.changeCounter,
-        };
+            changeCounter:
+              hasWorkflowChange
+                ? state.changeCounter + 1
+                : state.changeCounter,
+          };
 
         if (shouldValidate) {
           Object.assign(
@@ -448,8 +468,11 @@ export const useWorkflowEditorStore =
 
           isLoading: false,
           isSaving: false,
+          isExecuting: false,
           isDirty: false,
           saveError: null,
+          executionError: null,
+          execution: null,
 
           changeCounter: 0,
 
@@ -459,6 +482,7 @@ export const useWorkflowEditorStore =
         set({
           isLoading: false,
           isSaving: false,
+          isExecuting: false,
 
           nodes: [],
           edges: [],
@@ -474,6 +498,9 @@ export const useWorkflowEditorStore =
             error instanceof Error
               ? error.message
               : "Failed to load workflow.",
+
+          executionError: null,
+          execution: null,
 
           ...getValidationState([], []),
         });
@@ -549,6 +576,64 @@ export const useWorkflowEditorStore =
             error instanceof Error
               ? error.message
               : "Failed to save workflow.",
+        });
+      }
+    },
+
+    executeWorkflow: async () => {
+      const initialState =
+        useWorkflowEditorStore.getState();
+
+      if (
+        !initialState.workflowId ||
+        initialState.isExecuting
+      ) {
+        return;
+      }
+
+      set({
+        isExecuting: true,
+        executionError: null,
+        execution: null,
+      });
+
+      try {
+        const beforeSave =
+          useWorkflowEditorStore.getState();
+
+        if (beforeSave.isDirty) {
+          await beforeSave.saveWorkflow();
+        }
+
+        const currentState =
+          useWorkflowEditorStore.getState();
+
+        if (
+          currentState.isSaving ||
+          currentState.isDirty
+        ) {
+          throw new Error(
+            "Workflow could not be saved before execution."
+          );
+        }
+
+        const execution =
+          await executeWorkflowApi(
+            currentState.workflowId!
+          );
+
+        set({
+          isExecuting: false,
+          executionError: null,
+          execution,
+        });
+      } catch (error) {
+        set({
+          isExecuting: false,
+          executionError:
+            error instanceof Error
+              ? error.message
+              : "Failed to execute workflow.",
         });
       }
     },

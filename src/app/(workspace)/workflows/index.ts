@@ -1,4 +1,4 @@
-import { CreateWorkflowPayload, UpdateWorkflowPayload, WorkflowType } from "@/_types/workflows";
+import { CreateWorkflowPayload, UpdateWorkflowPayload, WorkflowExecutionResponse, WorkflowType } from "@/_types/workflows";
 import { authFetch } from "@/utils/apiClient";
 
 
@@ -95,3 +95,28 @@ export const restoreWorkflowApi = async (
   const data: WorkflowType = await response.json();
   return data;
 };
+
+export async function executeWorkflowApi(
+  workflowId: string
+): Promise<WorkflowExecutionResponse> {
+  const response = await authFetch(
+    `/workflows/${workflowId}/execute/`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!response.ok) {
+    const errorData =
+      await response.json().catch(() => ({}));
+
+    throw new Error(
+      errorData?.message ||
+        "Failed to execute workflow"
+    );
+  }
+
+  const data: WorkflowExecutionResponse = await response.json();
+
+  return data;
+}

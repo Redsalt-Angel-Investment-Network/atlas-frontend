@@ -19,7 +19,8 @@ export function WebhookConfigForm({
           onChange={(event) =>
             onChange({
               ...value,
-              method: event.target.value as WebhookConfig["method"],
+              method:
+                event.target.value as WebhookConfig["method"],
             })
           }
           className="h-9 w-full rounded-md border bg-background px-3 text-sm"
@@ -30,24 +31,6 @@ export function WebhookConfigForm({
           <option value="PATCH">PATCH</option>
           <option value="DELETE">DELETE</option>
         </select>
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium">
-          Path
-        </label>
-
-        <input
-          value={value.path}
-          onChange={(event) =>
-            onChange({
-              ...value,
-              path: event.target.value,
-            })
-          }
-          placeholder="/webhook"
-          className="h-9 w-full rounded-md border bg-background px-3 text-sm"
-        />
       </div>
     </div>
   );

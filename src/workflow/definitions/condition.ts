@@ -4,9 +4,26 @@ import type { NodeDefinition } from "../types";
 import { ConditionConfigForm } from "./configs/condition-config";
 
 const conditionConfigSchema = z.object({
-  expression: z
-    .string()
-    .min(1, "Expression is required"),
+  left: z.unknown(),
+
+  operator: z.enum([
+    "equals",
+    "notEquals",
+    "contains",
+    "notContains",
+    "greaterThan",
+    "greaterThanOrEqual",
+    "lessThan",
+    "lessThanOrEqual",
+    "isEmpty",
+    "isNotEmpty",
+  ]),
+
+  right: z.unknown(),
+
+  trueHandle: z.string().default("true"),
+
+  falseHandle: z.string().default("false"),
 });
 
 export type ConditionConfig = z.infer<
@@ -44,19 +61,50 @@ export const conditionNode: NodeDefinition<ConditionConfig> = {
   ],
 
   defaultConfig: {
-    expression: "",
+    left: "",
+    operator: "equals",
+    right: "",
+    trueHandle: "true",
+    falseHandle: "false",
   },
 
   configSchema: conditionConfigSchema,
 
   fields: [
     {
-      name: "expression",
-      label: "Expression",
-      type: "textarea",
-      placeholder: "status === 200",
-      description:
-        "Expression that determines which branch is followed.",
+      name: "left",
+      label: "Value",
+      type: "text",
+      placeholder: "{{input.status}}",
+    },
+    {
+      name: "operator",
+      label: "Operator",
+      type: "select",
+      options: [
+        { label: "Equals", value: "equals" },
+        { label: "Does not equal", value: "notEquals" },
+        { label: "Contains", value: "contains" },
+        { label: "Does not contain", value: "notContains" },
+        { label: "Greater than", value: "greaterThan" },
+        {
+          label: "Greater than or equal",
+          value: "greaterThanOrEqual",
+        },
+        { label: "Less than", value: "lessThan" },
+        {
+          label: "Less than or equal",
+          value: "lessThanOrEqual",
+        },
+        { label: "Is empty", value: "isEmpty" },
+        { label: "Is not empty", value: "isNotEmpty" },
+      ],
+    },
+    {
+      name: "right",
+      label: "Compare with",
+      type: "text",
+      placeholder: "active",
     },
   ],
 

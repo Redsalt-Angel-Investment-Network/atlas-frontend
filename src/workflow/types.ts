@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import type { z } from "zod";
-import { NodeType } from "./registry";
+
+import type { NodeType } from "./registry";
 
 export type NodeCategory =
   | "trigger"
@@ -34,8 +35,18 @@ export type NodeField =
       name: string;
       label: string;
       description?: string;
-      type: "text" | "url" | "textarea";
+      type: "text" | "url" | "textarea" | "json";
       placeholder?: string;
+    }
+  | {
+      name: string;
+      label: string;
+      description?: string;
+      type: "number";
+      placeholder?: string;
+      min?: number;
+      max?: number;
+      step?: number;
     }
   | {
       name: string;
@@ -70,19 +81,6 @@ export type NodeDefinition<TConfig = unknown> = {
   component?: ComponentType<NodeComponentProps>;
 
   configComponent?: ComponentType<NodeConfigProps<TConfig>>;
-};
-
-type AnyNodeDefinition = {
-  type: string;
-  label: string;
-  description?: string;
-  category: NodeCategory;
-  inputs: NodePort[];
-  outputs: NodePort[];
-  defaultConfig: unknown;
-  configSchema: z.ZodType<unknown>;
-  component?: ComponentType<NodeComponentProps>;
-  configComponent?: ComponentType<NodeConfigProps<unknown>>;
 };
 
 export type WorkflowNode = {

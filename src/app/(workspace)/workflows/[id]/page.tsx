@@ -78,6 +78,32 @@ export default function WorkflowPage() {
       (node) => node.id === selectedNodeId
     ) ?? null;
 
+
+  const executeWorkflow =
+    useWorkflowEditorStore(
+      (state) => state.executeWorkflow
+    );
+
+  const isExecuting =
+    useWorkflowEditorStore(
+      (state) => state.isExecuting
+    );
+
+  const executionError =
+    useWorkflowEditorStore(
+      (state) => state.executionError
+    );
+
+  const execution =
+    useWorkflowEditorStore(
+      (state) => state.execution
+    );
+
+  const validationStatus =
+    useWorkflowEditorStore(
+      (state) => state.validationStatus
+    );
+
   useEffect(() => {
     if (!params.id) {
       return;
@@ -170,25 +196,42 @@ export default function WorkflowPage() {
         <div className="flex items-center gap-3">
           <span
             className={
-              saveError
+              saveError || executionError
                 ? "text-xs text-destructive"
                 : "text-xs text-muted-foreground"
             }
           >
-            {isSaving
-              ? "Saving..."
-              : saveError
-                ? "Save failed"
-                : isDirty
-                  ? "Unsaved changes"
-                  : "Saved"}
+            {isExecuting
+              ? "Running..."
+              : executionError
+                ? "Run failed"
+                : saveError
+                  ? "Save failed"
+                  : isSaving
+                    ? "Saving..."
+                    : isDirty
+                      ? "Unsaved changes"
+                      : execution
+                        ? `Last run: ${execution.status}`
+                        : "Saved"}
           </span>
 
           <Button
             onClick={() => void saveWorkflow()}
-            disabled={!isDirty || isSaving}
+            disabled={!isDirty || isSaving || isExecuting}
           >
             {isSaving ? "Saving..." : "Save"}
+          </Button>
+
+          <Button
+            onClick={() => void executeWorkflow()}
+            disabled={
+              isExecuting ||
+              isSaving ||
+              validationStatus === "invalid"
+            }
+          >
+            {isExecuting ? "Running..." : "Run"}
           </Button>
 
           <Button onClick={validate}>
