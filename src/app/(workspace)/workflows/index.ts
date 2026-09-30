@@ -1,4 +1,4 @@
-import { CreateWorkflowPayload, UpdateWorkflowPayload, WorkflowExecutionResponse, WorkflowType } from "@/_types/workflows";
+import { CreateWorkflowPayload, UpdateWorkflowPayload, WorkflowExecutionHistoryItem, WorkflowExecutionResponse, WorkflowType } from "@/_types/workflows";
 import { authFetch } from "@/utils/apiClient";
 
 
@@ -113,6 +113,53 @@ export async function executeWorkflowApi(
     throw new Error(
       errorData?.message ||
         "Failed to execute workflow"
+    );
+  }
+
+  const data: WorkflowExecutionResponse = await response.json();
+
+  return data;
+}
+
+export async function getWorkflowExecutionsApi(
+  workflowId: string
+): Promise<WorkflowExecutionHistoryItem[]> {
+  const response = await authFetch(
+    `/workflows/${workflowId}/executions/`
+  );
+
+  if (!response.ok) {
+    const errorData =
+      await response.json().catch(() => ({}));
+
+    throw new Error(
+      errorData?.message ||
+        errorData?.detail ||
+        "Failed to load workflow executions"
+    );
+  }
+
+  const data: WorkflowExecutionHistoryItem[] = await response.json();
+
+  return data;
+}
+
+export async function getWorkflowExecutionApi(
+  workflowId: string,
+  executionId: string
+): Promise<WorkflowExecutionResponse> {
+  const response = await authFetch(
+    `/workflows/${workflowId}/executions/${executionId}/`
+  );
+
+  if (!response.ok) {
+    const errorData =
+      await response.json().catch(() => ({}));
+
+    throw new Error(
+      errorData?.message ||
+        errorData?.detail ||
+        "Failed to load workflow execution"
     );
   }
 

@@ -41,9 +41,66 @@ export type UpdateWorkflowPayload = {
   definition: WorkflowDefinition;
 };
 
-export type WorkflowExecutionResponse = {
+export type WorkflowExecutionStatus =
+  | "pending"
+  | "running"
+  | "completed"
+  | "failed"
+  | "cancelled";
+
+export type WorkflowNodeExecutionStatus =
+  | "pending"
+  | "running"
+  | "completed"
+  | "failed"
+  | "skipped"
+  | "cancelled";
+
+export type WorkflowNodeExecution = {
   id: string;
-  status: string;
+  node_id: string;
+  node_type: string;
+  status: WorkflowNodeExecutionStatus;
   output: Record<string, unknown> | null;
   error: Record<string, unknown> | null;
+};
+
+export type WorkflowExecutionResponse = {
+  id: string;
+  reference: string;
+  workflow: string;
+  workflow_version: number;
+  status: WorkflowExecutionStatus;
+
+  created_at: string;
+  started_at: string | null;
+  completed_at: string | null;
+
+  input: Record<string, unknown> | null;
+  output: Record<string, unknown> | null;
+
+  error: {
+    code: string;
+    type: string;
+    message: string;
+  } | null;
+
+  node_executions: WorkflowNodeExecution[];
+};
+
+export type WorkflowNodeExecutionState = {
+  status: WorkflowNodeExecutionStatus;
+  output: Record<string, unknown> | null;
+  error: Record<string, unknown> | null;
+};
+
+export type WorkflowExecutionHistoryItem = {
+  id: string;
+  reference: string;
+  workflow: string;
+  workflow_version: number;
+  status: WorkflowExecutionStatus;
+  started_at: string | null;
+  completed_at: string | null;
+  created_at: string;
 };

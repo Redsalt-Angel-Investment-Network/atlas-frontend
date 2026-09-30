@@ -9,6 +9,31 @@ import {
 import { getNodeDefinition } from "@/workflow/registry";
 import { useWorkflowEditorStore } from "@/workflow/stores/editor-store";
 import type { WorkflowFlowNode } from "@/workflow/stores/editor-store";
+import { WorkflowNodeExecutionStatus } from "@/_types/workflows";
+
+function getExecutionStatusLabel(
+  status: WorkflowNodeExecutionStatus
+): string {
+  switch (status) {
+    case "pending":
+      return "Queued";
+
+    case "running":
+      return "Running...";
+
+    case "completed":
+      return "Completed";
+
+    case "failed":
+      return "Failed";
+
+    case "skipped":
+      return "Skipped";
+
+    case "cancelled":
+      return "Cancelled";
+  }
+}
 
 export function WorkflowNode({
   id,
@@ -32,6 +57,31 @@ export function WorkflowNode({
   const hasWarning = nodeValidationIssues.some(
     (issue) => issue.severity === "warning"
   );
+
+  const executionStatus =
+    data.execution?.status;
+
+  const executionStatusLabel =
+    executionStatus
+      ? getExecutionStatusLabel(
+        executionStatus
+      )
+      : null;
+
+  const executionStatusClass =
+    executionStatus === "running"
+      ? "bg-blue-500 animate-pulse"
+      : executionStatus === "completed"
+        ? "bg-green-500"
+        : executionStatus === "failed"
+          ? "bg-destructive"
+          : executionStatus === "pending"
+            ? "bg-muted-foreground"
+            : executionStatus === "skipped"
+              ? "bg-muted-foreground"
+              : executionStatus === "cancelled"
+                ? "bg-yellow-500"
+                : "";
 
   return (
     <div
@@ -59,8 +109,28 @@ export function WorkflowNode({
       ))}
 
       <div className="border-b px-4 py-3">
-        <div className="text-sm font-semibold">
-          {definition.label}
+        <div className="flex items-start justify-between gap-3">
+          <div className="text-sm font-semibold">
+            {definition.label}
+          </div>
+
+          {executionStatus && (
+            <div
+              className="flex items-center gap-1.5 text-xs text-muted-foreground"
+              title={executionStatusLabel ?? undefined}
+            >
+              <span
+                className={[
+                  "h-2 w-2 rounded-full",
+                  executionStatusClass,
+                ].join(" ")}
+              />
+
+              <span>
+                {executionStatusLabel}
+              </span>
+            </div>
+          )}
         </div>
 
         {definition.description && (
@@ -84,6 +154,12 @@ export function WorkflowNode({
         {!hasError && hasWarning && (
           <div className="mt-2 text-xs text-yellow-600">
             Needs attention
+          </div>
+        )}
+
+        {data.execution?.status === "failed" && (
+          <div className="mt-2 text-xs text-destructive">
+            Execution failed
           </div>
         )}
       </div>
