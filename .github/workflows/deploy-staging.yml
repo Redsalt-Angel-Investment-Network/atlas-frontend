@@ -1,0 +1,56 @@
+
+name: Deploy Staging
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+concurrency:
+  group: cramani-staging-frontend
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy frontend to staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require develop branch
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/develop" ]; then
+            echo "Staging deployments must run from develop."
+            exit 1
+          fi
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.STAGING_KNOWN_HOSTS }}
+        run: |
+          test -n "$SSH_PRIVATE_KEY"
+          test -n "$SSH_KNOWN_HOSTS"
+
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/cramani_deploy
+          chmod 600 ~/.ssh/cramani_deploy
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy frontend
+        env:
+          STAGING_HOST: ${{ secrets.STAGING_HOST }}
+          STAGING_USER: ${{ secrets.STAGING_USER }}
+        run: |
+          ssh \
+            -i ~/.ssh/cramani_deploy \
+            -o BatchMode=yes \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$HOME/.ssh/known_hosts" \
+            "$STAGING_USER@$STAGING_HOST" \
+            'sudo /usr/local/bin/cramani-deploy-frontend'
