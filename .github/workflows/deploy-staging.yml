@@ -41,6 +41,10 @@ jobs:
           printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
+      - name: Verify SSH key
+        run: |
+          ssh-keygen -y -f ~/.ssh/cramani_deploy | ssh-keygen -lf -
+
       - name: Deploy frontend
         env:
           STAGING_HOST: ${{ secrets.STAGING_HOST }}
