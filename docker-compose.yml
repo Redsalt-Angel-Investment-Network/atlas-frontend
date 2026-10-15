@@ -1,7 +1,6 @@
-version: "3.9"
-
 services:
-  atlas-frontend:
+  app_blue:
     restart: always
-    ports:
-      - "3000:3000"
+
+  app_green:
+    restart: always

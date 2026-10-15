@@ -1,9 +1,32 @@
 services:
-  atlas-frontend:
+  app_blue:
     build:
       context: .
       dockerfile: docker/staging/Dockerfile
-
+      args:
+        NEXT_PUBLIC_APP_NAME: Atlas
+        NEXT_PUBLIC_API_TIMEOUT: "30000"
+        NEXT_PUBLIC_ENV: staging
+        NEXT_PUBLIC_API_URL: https://staging.cramani.com/api/v1
+    restart: always
     env_file:
       - env/.env.base
       - env/.env.staging
+    ports:
+      - "127.0.0.1:3001:3000"
+
+  app_green:
+    build:
+      context: .
+      dockerfile: docker/staging/Dockerfile
+      args:
+        NEXT_PUBLIC_APP_NAME: Atlas
+        NEXT_PUBLIC_API_TIMEOUT: "30000"
+        NEXT_PUBLIC_ENV: staging
+        NEXT_PUBLIC_API_URL: https://staging.cramani.com/api/v1
+    restart: always
+    env_file:
+      - env/.env.base
+      - env/.env.staging
+    ports:
+      - "127.0.0.1:3002:3000"
