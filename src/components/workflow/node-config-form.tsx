@@ -111,7 +111,9 @@ function ConfigField({
             return (
               <JsonField
                 value={
-                  (controllerField.value as Record<string, unknown>) ?? {}
+                  (controllerField.value as
+                    | Record<string, unknown>
+                    | unknown[]) ?? {}
                 }
                 onChange={controllerField.onChange}
                 placeholder={field.placeholder}
@@ -190,23 +192,37 @@ function ConfigField({
   );
 }
 
+type JsonValue =
+  | Record<string, unknown>
+  | unknown[];
+
 function JsonField({
   value,
   onChange,
   placeholder,
 }: {
-  value: Record<string, unknown>;
-  onChange: (value: Record<string, unknown>) => void;
+  value: JsonValue;
+  onChange: (value: JsonValue) => void;
   placeholder?: string;
 }) {
   const [text, setText] = useState(() =>
     JSON.stringify(value ?? {}, null, 2),
   );
+
   const [isFocused, setIsFocused] = useState(false);
 
   const displayValue = isFocused
     ? text
     : JSON.stringify(value ?? {}, null, 2);
+
+  const isValidJsonValue = (
+    parsed: unknown,
+  ): parsed is JsonValue => {
+    return (
+      parsed !== null &&
+      typeof parsed === "object"
+    );
+  };
 
   return (
     <Textarea
@@ -221,11 +237,7 @@ function JsonField({
         try {
           const parsed = JSON.parse(text);
 
-          if (
-            parsed &&
-            typeof parsed === "object" &&
-            !Array.isArray(parsed)
-          ) {
+          if (isValidJsonValue(parsed)) {
             onChange(parsed);
             setText(JSON.stringify(parsed, null, 2));
           }
@@ -241,11 +253,7 @@ function JsonField({
         try {
           const parsed = JSON.parse(nextText);
 
-          if (
-            parsed &&
-            typeof parsed === "object" &&
-            !Array.isArray(parsed)
-          ) {
+          if (isValidJsonValue(parsed)) {
             onChange(parsed);
           }
         } catch {

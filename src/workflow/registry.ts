@@ -4,6 +4,7 @@ import { conditionNode } from "./definitions/condition";
 import { setVariableNode } from "./definitions/set-variable";
 import { llmNode } from "./definitions/llm";
 import { toolNode } from "./definitions/tool";
+import { agentNode } from "./definitions/agent";
 
 export const nodeRegistry = {
   webhook: webhookNode,
@@ -12,6 +13,7 @@ export const nodeRegistry = {
   setVariable: setVariableNode,
   llm: llmNode,
   tool: toolNode,
+  agent: agentNode,
 };
 
 export type NodeType = keyof typeof nodeRegistry;
